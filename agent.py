@@ -4,14 +4,14 @@ from openai import OpenAI
 
 import config
 
+from tools.data import load_data
+from tools.graph import build_graph
+
 from tools.stubs import (
-    load_data,
-    build_graph,
     detect_communities,
     summarize_community,
     plot_network,
 )
-
 
 # --------------------------------------------------
 # 1. CONNECT TO BIGMODEL
@@ -44,8 +44,8 @@ def tool_load_data(topic, limit):
     state["df"] = load_data(topic, limit)
 
     return (
-        f"Successfully loaded {len(state['df'])} posts "
-        f"about '{topic}'."
+       f"Successfully loaded {len(state['df'])} comments "
+       f"about '{topic}'."
     )
 
 
@@ -153,7 +153,7 @@ TOOL_SPECS = [
         "type": "function",
         "function": {
             "name": "load_data",
-            "description": "Load simulated sample community posts about a given topic.",
+            "description": "Load and clean real Reddit comments about a given topic from the available dataset.",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -293,9 +293,9 @@ IMPORTANT RULES:
 5. If a tool reports an error, explain the error
    instead of claiming the operation succeeded.
 
-6. The sample data is simulated data, not live internet data.
-   Never claim that it was collected from the internet.
-
+6. The dataset contains real Reddit comments from a downloaded
+   dataset. It is static historical data, not live internet data.
+   Never claim that it provides live Reddit information.
 7. Remember the previous questions and tool results
    in the current conversation.
 
