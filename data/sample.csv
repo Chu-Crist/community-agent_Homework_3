@@ -1,0 +1,1119 @@
+﻿user,text,timestamp,reply_to
+jake_that_dude,"this is the right shape for routing. the useful extra column would be tokens_to_answer split into thinking vs visible output. tok/s made Qwen look faster, but 14811 vs 7386 tokens explains the wall clock. i would route strict JSON and batch jobs to Qwen, then send interactive chat to Gemma unless the prompt really needs format obedience.",2026-05-31 16:50:33+00:00,
+10F1,You didn't include how you ran them and what settings.,2026-05-31 16:52:35+00:00,
+DrBearJ3w,"Honestly,I prefer 35B with thinking off. It runs much faster for research/general tasks. The prefill speed far nore outweighs a ""3b"" model thinking.  For some serious tasks there is 27b.",2026-05-31 16:57:45+00:00,
+pmttyji,Can you include full llama.cpp commands you tried for both models?,2026-05-31 17:01:05+00:00,
+Jipok_,"Why disabled flash attention?
+
+Try disabling cache compression in gemma. It's not as large as in qwen, and you should be able to fit it into memory and achieve higher performance.",2026-05-31 17:19:00+00:00,
+geldonyetich,"I really don't like Gemma4:26B. It benchmarks alright but it's surprisingly prone to losing track of detail and even stroking out in practice. 
+
+Gemma4:31B, on the other hand, is the closest thing I have gotten to running a frontier model locally. Surely there's smarter ones, but not without significantly increasing the footprint.
+
+If it's speed you're after, maybe look at Nemotron 3 Nano Omni instead. That one is blazing fast, multimodal, and agentic. It's not as smart, but sometimes you need Batman and sometimes The Flash will do.",2026-05-31 17:55:09+00:00,
+nickm_27,You’re leaving a lot of performance on the table. Gemma4 26B-A4B with llama.cpp on Vulkan with my 7900XTX gets 120 tok/s https://github.com/NickM-27/VoiceAssistant/blob/main/configs/robot.ini,2026-05-31 18:43:57+00:00,
+FinalCap2680,"Thank you for the testing! 
+
+But IQ4\_XS-Q8nextn hybrid MTP is not exactly UD-Q4\_K\_XL with no MTP and will affect quality of the models.",2026-05-31 19:09:13+00:00,
+fabyao,You should get better performance with Vulkan. I have the 7900XT Rocm 7.2.3 has been poor,2026-05-31 22:06:32+00:00,
+peppernickel,I have a 24GB VRAM system with two RX 6700 XT running Gemma 4 26B with just a 3-14 second response time on a Nous Hermes agent on ROCm 7.1.1. Qwen3.6 35B needs a bit more VRAM for at least 64k context for the agent but MTP may help with that.,2026-06-01 01:47:21+00:00,
+WSTangoDelta,any spillover? on a 7900 things might be a little tight. I have a 9700 and running 35B-Q6KL I am up to 27.7GB in VRAM.,2026-06-01 02:07:53+00:00,
+IvGranite,"There was a bug in rocm/hip flash attention at long context lengths that would cause crashes. At least there was, not sure if it's been fixed or not. I'll have to retry",2026-06-01 02:41:58+00:00,Jipok_
+IvGranite,"No spillover! All vram, otherwise those numbers plummet",2026-06-01 02:43:02+00:00,WSTangoDelta
+Jorlen,"Only if you quantize KV cache.  I know because I went through this with ROCm, pulling my hair out trying to figure out the issue.
+
+I've since moved to vulkan, and honestly for my setup it's been mostly problem-free.  ROCm is a fucking nightmare.  For example, with ROCm I cannot use my two GPUs together, on top of other issues.  Vulkan doesn't give a shit, it just works.",2026-06-01 03:48:42+00:00,IvGranite
+ElSrJuez,"Whats the inference engine, setup?  
+Sorry if I missed it.",2026-06-01 05:03:08+00:00,
+Old-Cardiologist-633,"Did you try Qwen without MTP too? It may befaster than with MTP, as for 3B MTP is slower in many cases.",2026-06-01 10:48:15+00:00,
+Southern_Sun_2106,The 26B hallucinates while qwen never did. I cannot trust Gemma tbh.,2026-06-01 20:27:56+00:00,
+Glittering-Call8746,Which quant ?,2026-06-02 00:25:31+00:00,Southern_Sun_2106
+p_235615,"didnt tested gemma4 for voice, but for english or even many other common languages whisper-large-v3-turbo works really well with much much smaller VRAM footprint compared to gemma.",2026-06-02 05:16:41+00:00,nickm_27
+nickm_27,"Whisper is pretty awful in my experience, stopped using it long ago. Both parakeet and Gemma have been better. But actually I need to update that as now I'm running Qwen3ASR",2026-06-02 11:23:09+00:00,p_235615
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-05-31 17:03:38+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-05-31 17:18:49+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-05-31 17:44:12+00:00,
+m94301,Just made a quick patch to 0.2.1 to hide model names that have been deleted but to retain their config in case they ever come back!,2026-05-31 21:06:25+00:00,
+previaegg,Hi there! Please forgive the newb question. I'm pretty new to this. Does this run on top of Ollama running locally?,2026-06-01 02:30:11+00:00,
+m94301,"It is a WebUI for running llama-server, the server tool in the OG llama.cpp toolset.  Ollama is another type of wrapper around the core llama.cpp.
+
+I use llama.cpp directly because I run special builds for my hardware and also to try out new beta features like the recent MTP and tensor parallel.   Plus, llama-server just runs great.
+
+My issue was that I didn't like trying to remember all the CLI args and manage ports and GPU assignment manually, so I made a WebUI to do it visually.  The servers it runs are still the real  llama-server directly from the llama.cpp directory.",2026-06-01 02:53:38+00:00,previaegg
+previaegg,I appreciate the explanation. It looks awesome. If I pivot to llama.cpp I'll give it a go!,2026-06-01 03:09:48+00:00,m94301
+Fragrant-Purple504,"I've been using a bash script to do something similar (hardcoding params and overwriting based on external script calls)
+
+My main ""feature"" or reason for wanting to do this was based on the need to mount a large enough tmpfs and have the script copy model files from my NAS into the tmpfs and load it from there, avoiding the constant read&amp;write on my Nvme drive. This allows for a near instant model reload if I adjust params or need to swap smaller embedding modals etc.
+
+Was considering creating something like your Llama studio, but just ended up keeping it ""ugly"" in bash lol. Will definitely give it a test run at some point, but it would be great to see the added feature of keeping modal files in a tmpfs. Obviously not ideal for anyone who needs to use RAM as part of their VRAM",2026-06-01 13:30:35+00:00,
+m94301,"That's a really nice idea.  So currently there would be no problem in setting the model scan dir to the tmpfs, just point it in config and it will pick up what is there.  If models disappear their launch script will be retained but not shown in the list.  If they ever come back, the launch script will reappear.  That's all fine.
+
+But if you need a script to unpack to scan dir and then launch, that would need an addition to include a call to your script in each launcher.  Should be easy if that's needed, just let me know.",2026-06-01 14:56:39+00:00,Fragrant-Purple504
+dedSEKTR,Motivation behind using ReLU instead of GeLU?,2026-05-31 20:14:59+00:00,
+MendozaHolmes,"Reddit post generated by AI and the post image is a screenshot of a powerpoint slide generated by an AI
+
+ time to leave this sub",2026-05-31 20:15:00+00:00,
+tevlon,"i can gurantee you, the text is me. 100%. tired of witchhunting. .. my last post was literelly me giving 0 effort in the post and speaking like a caveman: 50 likes. This time i spent time into formatting and writing a full report. I SWEAR i typed this myself and people accuse me of ""AI"". The Image: Yes, it's ai. It's just a graph and 2 tables. It's not that deep.",2026-05-31 20:19:15+00:00,MendozaHolmes
+tevlon,"On throughput-bound or hardware-constrained settings, ReLU's cheapness is a real win, and the quality gap is often small. This matters on exactly the kind of constrained hardware.",2026-05-31 20:24:03+00:00,dedSEKTR
+BannedGoNext,That was actually a written or mostly hand written post. I'm surprised you can't quickly see the difference. The project and image was admitted by the op to be llm driven.,2026-05-31 20:26:11+00:00,
+VoiceApprehensive893,holy slop,2026-05-31 20:34:02+00:00,
+Relevant-Yak-9657,"Yeah, but dying neurons can greatly affect your performance. You sure that GeLU was a major blocking factor and needed to be removed? Heck even leaky_relu might have been better than ordinary relu.",2026-05-31 20:35:10+00:00,
+tevlon,"honestly, i didn't put much though into it. The good thing is: it runs locally. I can just train for another hour and let the facts speak. You might be right. Let's check. This is the reason, why i posted. There is so much potential to squeeze every inch of performance with the community",2026-05-31 20:40:28+00:00,Relevant-Yak-9657
+entsnack,Thanks GPT!,2026-05-31 20:40:52+00:00,
+MendozaHolmes,"buddy have you seen his response, dude can barely type english https://www.reddit.com/r/LocalLLaMA/comments/1tt600s/comment/op07d28/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+
+ high doubt on him writing much here",2026-05-31 23:21:10+00:00,BannedGoNext
+MendozaHolmes,"tru that, time to rejoin",2026-05-31 23:21:16+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-05-31 20:52:33+00:00,
+ttkciar,"Violates Rule Two:  Off-topic posts
+
+Violates Rule Four:  Self-promotion",2026-05-31 21:13:08+00:00,
+flower-power-123,"I have a couple of questions that are maybe obvious to you but not to me:  
+
+*  You seem to be saying that deepseek is a less capable model than chatGPT.  Why do you think that?  I use deepseek a lot and I find it to be very good.  
+*  Did you use a local model at all in this?  I'm not objecting.  It looks like your technique could be used the same way or even better on a local model.",2026-05-31 21:15:46+00:00,
+PetersOdyssey,How is a harness for using open source models off topic?,2026-05-31 21:17:22+00:00,ttkciar
+PetersOdyssey,"1. It is overwhelmingly less capable on complex tasks
+
+2. Yeah, it uses Deepseek Flash for a good number of them",2026-05-31 21:18:01+00:00,flower-power-123
+ttkciar,"It seems to be about local inference only incidentally, while focusing primarily on remote inference services.",2026-05-31 21:21:18+00:00,PetersOdyssey
+flower-power-123,The guy wrote software that he is giving away for free and it uses a local model.  Please reconsider your decision.,2026-05-31 21:44:47+00:00,ttkciar
+ttkciar,"I looked at it more closely to see if I was missing something, but it appears he did not use a locally hosted model.  All of his data was processed using commercial inference service APIs.
+
+Besides that, though, u/PetersOdyssey has not been particularly active in the sub, and falls quite a bit short of the 10% threshold established in the rules.  Reviewing his account activity, what little he has posted/commented here has not contributed much to the sub's quality of discourse, else I could justify an exception to Rule Four.
+
+That having been said, Arnold does seem like a valuable technology, and I think a lot of people will find it useful.  It just doesn't fit in LocalLLaMA, is all.
+
+u/PetersOdyssey, I hope you will re-post Arnold to the r/LLMDevs and r/LLM subreddits, where I expect it to be well-received.",2026-05-31 22:25:02+00:00,flower-power-123
+PetersOdyssey,"Yes will do, thanks!",2026-06-01 00:45:12+00:00,ttkciar
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-05-31 21:03:18+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-05-31 22:12:03+00:00,
+Thrumpwart,"*Semantic Tube Prediction (STP) leverages representation geometric to regularize LLM hidden-state trajectories toward locally linear geodesics during fine-tuning, thereby greatly improving data efficiency. The original STP recipe samples random token sub-spans, which is compatible with the base large language model (LLM) training architecture. Inspired by STP, we are interested to investigate whether the sampling position can further enhance the semantic structure of multi-step reasoning, and hence affect its geometric impact. We applied STP at consecutive semantic reasoning step boundaries and achieved 168x more accurate multi-step latent prediction than frozen baselines on ProcessBench (3,400 samples), compared to only 4x for the random-token STP. Probing the latent manifold with a learned non-linear predictor reveals that STP-shaped trajectories are smooth curves, not straight lines: a 3-layer MLP reduces prediction error by a further 3-12x over linear extrapolation on step-boundary models. Removing the language modeling loss yields trajectories that are 2x more MLP-predictable than the combined loss, revealing a tradeoff between generation quality and geometric purity. Our results identify sampling position as the critical variable in geometric regularization and establish multi-step latent prediction MSE as a new evaluation metric for this class of methods.*",2026-05-31 23:14:18+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-05-31 23:53:06+00:00,
+ttkciar,Violates Rule Three: Low-effort post,2026-06-01 01:30:50+00:00,
+VirtualAlias,"Sorry, saw stuff like this: https://www.reddit.com/r/LocalLLaMA/comments/1ttn15z/entire_world_we_need_more_gpus_meanwhile_jensen/ which is way less work than it took for me to identify that chain of supply attacks are picking up, that a meaningful/novel solution in the future would be to pass specs rather than actual code so that packages could be built on-site by LLMs, and prompt for a UI that represented that idea. Should have explained it better! Sorry about that!",2026-06-01 20:30:51+00:00,ttkciar
+ttkciar,"I remove low-effort, low-value trash-posts like that dancing Jensen video when I see them in time, but not after they've already gathered hundreds of upvotes.
+
+ Sometimes removing a popular post risks inciting widespread backlash, and it's best to avoid that.",2026-06-01 20:46:27+00:00,
+VirtualAlias,That's fair - I'd probably do the same thing thing. Not worth the smoke.,2026-06-02 05:03:46+00:00,ttkciar
+WhyLifeIs4,"https://preview.redd.it/8867janrpk4h1.png?width=394&format=png&auto=webp&s=10a7129f759989fc77239d8b36b635d6acb05882
+
+[https://www.minimax.io/blog/minimax-m3](https://www.minimax.io/blog/minimax-m3)",2026-06-01 01:24:55+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-01 01:43:48+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-01 03:29:29+00:00,
+Kazushi998,"in your experience, does gemma 2b, 4b good for casual chat?",2026-06-01 03:42:36+00:00,
+AfternoonOk5482,5 seconds for a 4b model to write a poem doesn't sound super fast. Is that CPU inference? Maybe you could use a token counter to estimate the tokens and wrap your api call on a time counter so you give a better tokens per second estimation.,2026-06-01 03:48:18+00:00,
+AnticitizenPrime,"It was like a 70 line poem, and that's just me guessing at the time. But yeah, I wanted to get hard numbers for this post, but it's been surprisingly challenging to get accurate numbers. Maybe I'm doing it wrong. I can say that it's clearly faster than using the Q4 quant via llama.cpp, just by having them both loaded into memory side by side and testing. And the audio modality working seems to be a win as well.",2026-06-01 03:53:59+00:00,AfternoonOk5482
+annodomini,"I suspect probably one of the big reasons it's so much faster is that LiteRT already supports` MTP for Gemma 4.
+
+That's a [work in progress for llama.cpp](https://github.com/ggml-org/llama.cpp/pull/23398), though that PR only covers 31B and 26B-A4B, MTP works differently on E4B and E2B so that would be another change still to support.
+
+So yeah, LiteRT is likely to be your best bet for running E4B and E2B as fast as possible for a bit.",2026-06-01 03:59:03+00:00,
+AnticitizenPrime,"Dammit, that's something I meant to mention in my post, but it got lost in the shuffle. Yes! That was one of the big wins, too, lol.
+
+Edit: I did mention MTP in the post title, but forgot to elaborate on it in the description.",2026-06-01 04:07:05+00:00,annodomini
+annodomini,What's wrong with audio on llama.cpp? It works fine for me for E2B and E4B.,2026-06-01 04:10:24+00:00,AnticitizenPrime
+AnticitizenPrime,Maybe it's just that none of the clients I use accept audio as an input modality. Could just be a skill issue on my part.,2026-06-01 04:12:39+00:00,annodomini
+annodomini,"Can just use it with llama-ui. There's an option for ""show microphone on empty input"" that gives you a microphone button you can use to easily record audio input, or you can attach it as files.",2026-06-01 04:16:28+00:00,AnticitizenPrime
+OsmanthusBloom,"That sounds interesting. Have you tried benchmarking with llama-benchy? (note the y)
+It can benchmark OpenAI endpoints.",2026-06-01 06:19:20+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-01 05:09:16+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-01 05:29:30+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-01 05:56:37+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-01 06:09:05+00:00,
+grabber4321,"Those that you mentioned might work. The main thing about these models - you have to have a good harness for them. 
+
+Get OpenCode - its very good at using all the model's capabilities. 
+
+Again, you dont have a dedicated GPU, so your CPU is going to struggle.",2026-06-01 07:53:20+00:00,
+SplitNice1982,"Maybe something like this can work too especially since it should use much less vram for context compared to the others: https://huggingface.co/unsloth/Nemotron-3-Nano-30B-A3B-GGUF/tree/main
+
+Most likely though gpt-oss or Qwen should work well.",2026-06-02 02:04:06+00:00,
+KURD_1_STAN,Wouldn't gemma 26b and/or qwen 35b at a 20-25GB size be better than the 9b ? Idk how moe work on cpu but of it is the same then it gotta be faster,2026-06-05 16:24:01+00:00,
+digitalfreshair,what the memory bandwidth?,2026-06-01 07:56:13+00:00,
+okoyl3,You still spent your wedding budget on a 1T AI girlfriend,2026-06-01 07:58:30+00:00,
+mrgreatheart,You didn’t think to bring back a few of their hyper efficient 3B models that run on a 2018 iPod but beat Mythos senseless on every benchmark between now and 2038?,2026-06-01 07:59:19+00:00,
+pmttyji,">Only downside is I accidentally caused three timeline paradoxes ....
+
+So when's the bubble burst? Open models won, right?",2026-06-01 08:07:59+00:00,
+airen977,Bitcoin in 2038?,2026-06-01 08:14:48+00:00,
+Davsp36,Has GTA 6 released when you were there?,2026-06-01 08:15:01+00:00,
+superdariom,Let's not get in to the realms of fantasy here..,2026-06-01 08:19:06+00:00,Davsp36
+LocalLLaMA-ModTeam,Rule 3,2026-06-01 08:20:49+00:00,
+DeltaSqueezer,"It's always good to get hands dirty and do the implementation, only then do you _really_ know. I have a vague idea of how transformers work, but I don't really know and couldn't implement one from scratch from memory. Until I implement it, I will not really understand it.
+
+Unfortunately, time is a limited resource and so I have to pick and choose what to go deep on and have to 80/20 the rest.",2026-06-01 10:02:34+00:00,
+Scared_Animator9241,"Completely agree on the 80/20 rule, time is the ultimate bottleneck. You have to choose your battles",2026-06-01 10:32:42+00:00,DeltaSqueezer
+rhinodevil,"Very nice! Back in the days (even pre-LLM) I tried to build a robot with a smartphone as its brain with [https://www.kickstarter.com/projects/peterseid/romo-the-smartphone-robot-for-everyone/](https://www.kickstarter.com/projects/peterseid/romo-the-smartphone-robot-for-everyone/) and [https://www.robot-advance.com/EN/art-rovio-1178.htm](https://www.robot-advance.com/EN/art-rovio-1178.htm) . I did not get that far.. About the ""boring"" software parts: Are you happy with the memory system (if it is already implemented)? What did you use / how does it work?",2026-06-01 09:44:20+00:00,
+Fickle-Box1433,Turns out the killer app for local LLMs is a $10 toy robot that tells kids jokes in the backyard. Sometimes the best use case finds you at the toy store.,2026-06-01 11:53:45+00:00,
+rhinodevil,"I was always wondering (no joke) why there is no electronic pet from e.g. Apple, like this [https://www.pleoworld.com/pleo\_rb/eng/products.php](https://www.pleoworld.com/pleo_rb/eng/products.php) , but in good.",2026-06-01 12:51:02+00:00,Fickle-Box1433
+kiwibonga,I'm working on AI-powered pets. Kind of disappointed with the robot kits out there; they're all pretty much underfunded public school science project level shit-ass components. You're better off rooting an android phone and strapping it to the chassis than using any of the overpriced arduino components (for more than motor control anyway).,2026-06-01 13:29:53+00:00,
+Turbulent_Pin7635,Lego storm?,2026-06-01 19:08:27+00:00,kiwibonga
+badlogicgames,"ohhh! i remember that rovio thing.
+
+the memory system is a markdown file on disk, that the agent can modify with a simple TODO list like tool. its context get auto-injected into the system prompt each turn. plenty effective for this use case.",2026-06-01 23:41:34+00:00,rhinodevil
+rhinodevil,"Seems to me like no RAG, if I understand correctly. I was just asking, because I have a project where I do memory extraction from recent chats and later memory injection via RAG (cosine similarity score & reranking) and I experienced the local LLMs to be limited in understanding that and very sensitive about the prompt structure (smaller LLMs get the injected memories and the actual user prompt confused more often, than larger LLMs, naturally).",2026-06-02 07:30:02+00:00,badlogicgames
+Automatic-Arm8153,"Pretty much everyone here does. 
+
+It’s pretty standard and well known. You have now discovered the frontier space of AI users.
+
+Unless your an AI yourself",2026-06-01 09:27:43+00:00,
+blakok14,Where are you trying it? I use it with Opencode and it doesn't know how to use the mcps,2026-06-01 11:40:19+00:00,
+Schlick7,Yes most of us use them. The trick for MCP's is to turn them on/off as needed and not let them just stay on all of the time. If you are using a small model or limited context like some here are this is very important. Some MCP's add pretty large amount of Prompt context.,2026-06-01 13:46:58+00:00,
+EatTFM,Qwen 27B bartowsky IQ4 looks interesting. In all other cases I'd prefer the VRAM savings over marginal speed increments.,2026-06-01 08:41:41+00:00,
+mr_Owner,"In my personal webdev usages, by comparing with and without mtp I noticed no-mtp ftw on  output quality!",2026-06-01 12:55:29+00:00,
+Ok_Warning2146,Probably MTP is not meant for single user?,2026-06-01 13:21:01+00:00,mr_Owner
+pastypryce08,Interesting results,2026-06-01 13:40:41+00:00,mr_Owner
+MerePotato,"The Q8 ones are anything but marginal if you can fit them, I'd argue the same can be said for the Q4 27B ones",2026-06-01 14:37:45+00:00,EatTFM
+VoidAlchemy,"For MoEs with MTP you have to drill down into the quantization choices for individual tensor types to compare. The strategy is to keep the *always active* tensors e.g. the attn/shexp/dense layers slightly higher quantization types, and the dense routed experts lower quantization types.
+
+Having full q8_0 MTP *should* give slightly better acceptance rates over more quantized MTP tensors, but trade-offs given memory/speed/workload type.
+
+If you use ik_llama.cpp, you can re-quantize the MTP output layer on the fly to something smaller and get a speed-up with `-mtprot iq4_ks` for example. It works on mainline quants like you're testing just fine.
+
+You can get some more info on that feature including some discussion on the size differences from ik himself (he wrote iq4_xs and iq4_nl quant types for mainline years ago) here: 
+
+https://github.com/ikawrakow/ik_llama.cpp/pull/1809",2026-06-01 14:43:26+00:00,
+Shoddy_Bed3240,Do you have link to bartowski's MTP ggufs? I don’t see it on huggingface,2026-06-01 15:06:57+00:00,
+ObserverJ,"He updated his models with MTP, using the same name. Just go inside one of qwen3.6 and searh for MTP inside the text",2026-06-01 15:20:39+00:00,Shoddy_Bed3240
+Shoddy_Bed3240,Thanks. Found qwen35.nextn\_predict\_layers in [https://huggingface.co/bartowski/Qwen\_Qwen3.6-27B-GGUF/blob/main/Qwen\_Qwen3.6-27B-Q8\_0.gguf](https://huggingface.co/bartowski/Qwen_Qwen3.6-27B-GGUF/blob/main/Qwen_Qwen3.6-27B-Q8_0.gguf),2026-06-01 15:25:30+00:00,ObserverJ
+wil_is_cool,"MTP generates the **exact** same results, it's how it works.",2026-06-02 04:08:59+00:00,mr_Owner
+mr_Owner,"It does not, try seed flag with a fixed number and rerun and compare your outputs yoself",2026-06-02 05:45:44+00:00,wil_is_cool
+liftheavyscheisse,"mtp influences which specific token gets sampled, but leaves the distribution unchanged.
+
+https://leetllm.com/learn/speculative-decoding",2026-06-02 08:45:48+00:00,mr_Owner
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+ I am a bot, and this action was performed automatically. Please contact the moderators of this subreddit if you have any questions or concerns.",2026-06-01 09:28:07+00:00,
+Comfortable_Ebb7015,Why comparing a 9B and a 31B?,2026-06-01 10:34:54+00:00,
+SummarizedAnu,Because qwopus beat gemma 4 26B,2026-06-01 10:46:01+00:00,Comfortable_Ebb7015
+Velocita84,All those opus distils are ass just test the original qwen models,2026-06-01 11:05:45+00:00,SummarizedAnu
+Comfortable_Ebb7015,"It might be lucky in some task, or the problem could have been on the training set. One single prompt doesn't say much. I already had Gemma 26b beating sonnet 4.6 in fixing a Java JDBC issue. So qwopus 9B > Sonnet 4.6!",2026-06-01 11:53:13+00:00,SummarizedAnu
+Thin_Pollution8843,Pff my Qwender3.6-0.6B-UNSTOPABLE-DetectiveDistill-ABSOLUTELYNOTAGAY-NonSmellingFarts-MTP-GGUF found my grandmother's stash of money so I took a bit for a new GPU.,2026-06-01 12:17:39+00:00,
+JR2502,"Beat it at what?  
+  
+\>""*Took Gemma 500s and qwopus 200s and gemma was right tho.*""
+
+Is ""qwopus"" faster arriving at the wrong answer?",2026-06-01 14:04:46+00:00,SummarizedAnu
+SummarizedAnu,"Yes but only at this task with 31B.
+But it won against 26B on a different task",2026-06-01 16:36:19+00:00,JR2502
+Borkato,The gay version is WAY better.,2026-06-01 16:37:04+00:00,Thin_Pollution8843
+Thin_Pollution8843,I was afraid to try…. It now I must!,2026-06-01 17:36:05+00:00,Borkato
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-01 10:39:58+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-01 10:57:25+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+ I am a bot, and this action was performed automatically. Please contact the moderators of this subreddit if you have any questions or concerns.",2026-06-01 11:34:39+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-01 11:53:07+00:00,
+kiwibonga,"I would agree it's a highly suspicious listing. The store has 100% positive feedback with exactly 20 5-star reviews with no comments. It has another store's watermark on the pictures and all the other stores are selling the naked chip for $700+ (this listing has the pcie adapter, heatsink, shroud and fan).
+
+Paypal is a good move though, you can get an instant refund for anything.",2026-06-01 12:59:31+00:00,
+thedefibulator,!remindme 1 month,2026-06-01 13:27:33+00:00,
+RemindMeBot,"I will be messaging you in 1 month on [**2026-07-01 13:27:33 UTC**](http://www.wolframalpha.com/input/?i=2026-07-01%2013:27:33%20UTC%20To%20Local%20Time) to remind you of [**this link**](https://www.reddit.com/r/LocalLLaMA/comments/1ttr60r/cheap_v100_32gb/op4hnrc/?context=3)
+
+[**11 OTHERS CLICKED THIS LINK**](https://www.reddit.com/message/compose/?to=RemindMeBot&subject=Reminder&message=%5Bhttps%3A%2F%2Fwww.reddit.com%2Fr%2FLocalLLaMA%2Fcomments%2F1ttr60r%2Fcheap_v100_32gb%2Fop4hnrc%2F%5D%0A%0ARemindMe%21%202026-07-01%2013%3A27%3A33%20UTC) to send a PM to also be reminded and to reduce spam.
+
+^(Parent commenter can ) [^(delete this message to hide from others.)](https://www.reddit.com/message/compose/?to=RemindMeBot&subject=Delete%20Comment&message=Delete%21%201ttr60r)
+
+**RemindMeBot is switching to username summons.** Instead of `!RemindMe 1 day`, use `u/RemindMeBot 1 day`. [More info.](https://www.reddit.com/r/RemindMeBot/comments/1tskg07/remindmebot_is_switching_to_username_summons/)
+
+*****
+
+|[^(Info)](https://www.reddit.com/r/RemindMeBot/comments/e1bko7/remindmebot_info_v21/)|[^(Custom)](https://www.reddit.com/message/compose/?to=RemindMeBot&subject=Reminder&message=%5BLink%20or%20message%20inside%20square%20brackets%5D%0A%0ARemindMe%21%20Time%20period%20here)|[^(Your Reminders)](https://www.reddit.com/message/compose/?to=RemindMeBot&subject=List%20Of%20Reminders&message=MyReminders%21)|[^(Feedback)](https://www.reddit.com/message/compose/?to=Watchful1&subject=RemindMeBot%20Feedback)|
+|-|-|-|-|",2026-06-01 13:28:28+00:00,thedefibulator
+Newtonip,"Also, the seller account was created in January 2026 and there was no activity until March when those 20 no comment 100% feedback scores appeared.
+
+  
+This is definately a scam.",2026-06-01 13:31:20+00:00,kiwibonga
+Formal-Exam-8767,SXM2?,2026-06-01 13:36:37+00:00,
+sn2006gy,Isn't there a 130% tariff you will be slapped with if this does indeed get shipped?,2026-06-01 14:10:43+00:00,
+MachineZer0,"I’ve been buying a lot of water cooling accessories from Aliexpress. It’s always been the all-in price for US on that platform.
+
+When I order Alibaba, then it is different. I need to negotiate DAP or DDP shipping.",2026-06-01 14:13:35+00:00,sn2006gy
+MachineZer0,I only bought 1. I’m rolling the dice that the price is not too far off from market and I’m just stacking promos.,2026-06-01 14:14:52+00:00,Newtonip
+MachineZer0,Supposedly SXM2 32gb in a turbo PCIE adapter/enclosure. Flexing PayPal protection if actual item deviates from description.,2026-06-01 14:15:54+00:00,Formal-Exam-8767
+sn2006gy,water cooling may not be considered compute,2026-06-01 14:27:51+00:00,MachineZer0
+MerePotato,"The GPU appears to be on carpet in the listing image, ouch",2026-06-01 14:39:41+00:00,
+Scared-Tip7914,"Im sorry dude but you are 99% about to get scammed, I had a run in with such a store a few years back, dont waste your money and put that 500 towards something like a used 3090 (the ‘ol reliable lmao) with 24 gbs. You might need to shell out 50 or max 100 more but that thing is at least real and runs local models beautifully.
+
+Edit: Just saw your already bought it, in that case best of luck and may the dragons guide your shipment :D",2026-06-01 14:41:12+00:00,
+red_dub,!remindme 1 month,2026-06-01 16:00:13+00:00,
+rog-uk,Best of luck!,2026-06-01 17:09:40+00:00,
+pile-of-V100s,"I got most of my 32gb V100 SXM2's for ~$460 from a US seller, so after considering mine needed sxm2 adapter, you're saving $50 to buy a harder to cool version from a sketchier seller.  Not really ""cheap"" imo...",2026-06-01 17:11:04+00:00,
+myogui,Bought one too 🤞,2026-06-01 17:12:05+00:00,
+Turbulent_Pin7635,"People hate China, until people loves China.
+
+Did you already send thoughts and prayers to our beloved world leader?",2026-06-01 18:51:22+00:00,
+CryMoreT_T,"![img](q4m0chot7q4h1)
+
+Almost definitely a scam.  Extremely sus",2026-06-01 19:54:54+00:00,
+shansoft,"Looks like this already package the board onto the PCIE adapter already. Seems around the right price, but definitely use some kind of payment protection with these aliexpress store.",2026-06-01 22:11:57+00:00,
+icepatfork,"Bought the same card from China about 2 months ago, unbeatable perfs for that money for sure I did pay around 550 USD for it, I hope this seller is legit, more data here :
+
+[https://www.reddit.com/r/LocalLLaMA/comments/1s0fje7/nvidia\_v100\_32\_gb\_getting\_115\_ts\_on\_qwen\_coder/](https://www.reddit.com/r/LocalLLaMA/comments/1s0fje7/nvidia_v100_32_gb_getting_115_ts_on_qwen_coder/)",2026-06-01 22:24:47+00:00,
+Effective_Attempt_72,It’s worth nothing,2026-06-02 01:09:03+00:00,
+tecneeq,">500 towards something like a used 3090
+
+You didn't account for the cost of a time machine to get that price.",2026-06-02 10:41:18+00:00,Scared-Tip7914
+MachineZer0,Update: I cancelled my order after the extortion attempt of an additional $418 over Whatsapp. They shouldn’t receive contact information to go off platform on the shakedown. Sorry for those who bought and had to seek refund.,2026-06-02 17:13:10+00:00,
+rog-uk,"It's probably pissing into the wind, but at least report them so that store gets taken down.",2026-06-02 18:03:37+00:00,MachineZer0
+beryugyo619,"They don't seem to actually sell cheap GPUs on AliExpress, it has to be Alibaba or Taobao or one of those Contact Us platforms. The express is not like Alibaba Lite, it's separate and not shady enough for them to list MI50. 
+
+There are some GPUs on the Express not the baba, but they're not cheap or exotic at all, just regular gaming stuffs at consumer prices. Only useful if you were like looking for commodity Chinese internet cafe cards or 800dpi gaming mice for some reason.",2026-06-02 18:16:34+00:00,
+kanduking,please compare actual memory bandwidth numbers this 32gb is a step up from ddr5 but still much slower than gddr7,2026-06-02 23:18:55+00:00,
+brendenderp,Just fyi there's an update already in the post description,2026-06-09 23:10:43+00:00,thedefibulator
+MattV0,No news yet?,2026-07-01 13:41:56+00:00,thedefibulator
+cgs019283,It would be nice if local models were included in your report.,2026-06-01 13:56:46+00:00,
+Fickle-Box1433,I'm planning to extend. I have only a small GPU so I'd need a provider anyway. I hit a budget issue after spending about $100 on these experiements and I settled only on closed models for now unfortunately. Planning to add open models as soon as my budget allows again,2026-06-01 13:59:40+00:00,cgs019283
+Fickle-Box1433,"For precision: Laguna is an open model (https://ollama.com/library/laguna-xs.2), but I tested it through API because poolside is making it free for now.",2026-06-01 14:04:00+00:00,Fickle-Box1433
+arbv,The worst title is not the one you wrote yourself. It's the one a model have written for you.,2026-06-01 14:27:29+00:00,
+sn2006gy,Sell it and buy stonks so you can pay cash for the vera rubin update on the Spark DGX's in 2028,2026-06-01 14:05:53+00:00,
+FullstackSensei,"I think it's a weird flex, or you forgot to add /s at the end. I'm personally leaning towards the latter.",2026-06-01 14:12:00+00:00,
+entsnack,I'll profit $400 at most so I'll just spend it on RPi 5 or iPod mods.,2026-06-01 14:16:18+00:00,sn2006gy
+Stepfunction,"Sell both 4090s, port the necessary drivers over and use the H100 and RPi 5 for gaming.",2026-06-01 14:17:14+00:00,
+entsnack,If I didn't provide context I'd have the inference monkeys all up in here with uninteresting use cases.,2026-06-01 14:18:39+00:00,FullstackSensei
+FullstackSensei,Would be hilarious to see a Jeff Gierling video testing an H100 on a pi 5,2026-06-01 14:20:19+00:00,Stepfunction
+sn2006gy,4090 sells for a lot more than 400... unless you're floating all that gear on credit card - in which case RIP,2026-06-01 14:27:18+00:00,
+entsnack,I meant net profit after what I paid for it at launch.,2026-06-01 14:30:15+00:00,sn2006gy
+MerePotato,"Terrible time to buy stocks imo, lotta big players are banking on retail traders buying high",2026-06-01 14:45:01+00:00,sn2006gy
+sn2006gy,"I've made 40% ROI in stocks this year... i hate all this... but just because I hate it, doesn't mean it's not a great time to buy.",2026-06-01 14:47:25+00:00,
+MerePotato,Thing is you run the risk of those big players cashing out if confidence falters and leaving you with the bag,2026-06-01 14:49:01+00:00,
+sn2006gy,I already have an exit strategy,2026-06-01 15:05:44+00:00,MerePotato
+voyager256,"while at it , buy a B200 and use it for DLSS5 while gaming.",2026-06-01 21:41:21+00:00,Stepfunction
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-01 14:58:00+00:00,
+No-Alfalfa6468,This guy doesn't look like he's hosting anything locally.,2026-06-01 15:05:39+00:00,
+ttkciar,"Violates Rule Three:  Low-effort posts
+
+Violates Rule Two:  Until M3 weights are published, this is off-topic for LocalLLaMA.",2026-06-01 15:13:19+00:00,
+MaxKruse96,qwhen,2026-06-01 15:09:50+00:00,
+ab2377,i like this word a lot!,2026-06-01 15:10:41+00:00,MaxKruse96
+FoxiPanda,Somewhere between now and never.,2026-06-01 15:14:59+00:00,
+ab2377,pretty sure they will release it tomorrow 😤,2026-06-01 15:17:05+00:00,FoxiPanda
+Comacdo,Why so sure ?,2026-06-01 15:19:25+00:00,ab2377
+DiscipleofDeceit666,What do you use 4b for?,2026-06-01 15:23:33+00:00,
+ab2377,i had a dream!,2026-06-01 15:25:59+00:00,Comacdo
+craftogrammer,qwomorrow,2026-06-01 15:35:18+00:00,ab2377
+OMG_IM_A_GIRL,Calm down Ramanujan.,2026-06-01 15:36:37+00:00,ab2377
+KURD_1_STAN,"He just picked the middle between now and never, s simple decision really nothing to be sure about",2026-06-01 15:37:42+00:00,Comacdo
+ab2377,"in opencode, web searches, i read news on it. run docker, write scripts, little good and nice and fast things.",2026-06-01 15:38:34+00:00,DiscipleofDeceit666
+EveningIncrease7579,![img](iegqf0imyo4h1),2026-06-01 15:41:25+00:00,
+some_user_2021,Qwhen will then be now?,2026-06-01 15:43:33+00:00,MaxKruse96
+freehuntx,qwen slowly drifts to cloud only. Sorry buddy.,2026-06-01 15:50:04+00:00,
+info_solutions,Ask Alibaba Cloud !,2026-06-01 15:51:15+00:00,
+grabber4321,you probably didnt even use 3.6 properly yet.,2026-06-01 15:54:05+00:00,
+No_Swimming6548,"Roughly in 20 days, or never",2026-06-01 15:58:01+00:00,
+ab2377,i did what my gpu poor allowed.,2026-06-01 15:58:48+00:00,grabber4321
+ab2377,and i loved it https://www.reddit.com/r/LocalLLaMA/s/V9VFuVwh0U,2026-06-01 15:59:33+00:00,grabber4321
+Abject-Kitchen3198,First word on my mind,2026-06-01 16:03:51+00:00,MaxKruse96
+kevinlch,qwhen.gguf when?,2026-06-01 16:06:28+00:00,MaxKruse96
+fustercluck6000,In a little qwhile,2026-06-01 16:15:43+00:00,MaxKruse96
+some_user_2021,qwhile(!qwen) qomplain();,2026-06-01 16:24:44+00:00,fustercluck6000
+KillaDan365,I ain't gonna live forever,2026-06-01 16:58:41+00:00,FoxiPanda
+dondiegorivera,Someone on Linkedin calculated tomorrow based on recent Alibaba release patterns. Let’s hope the best.,2026-06-01 18:05:12+00:00,
+Iory1998,There is no Qwen3.6-4B lol,2026-06-01 18:12:11+00:00,grabber4321
+DiscipleofDeceit666,"But it hallucinates tho, like a lot right?",2026-06-01 18:54:23+00:00,ab2377
+HitarthSurana,greedy qoblins,2026-06-01 18:57:35+00:00,
+ab2377,not at all. don't give it things that 32b models should be doing.,2026-06-01 19:10:39+00:00,DiscipleofDeceit666
+DiscipleofDeceit666,Like what? I never trusted those models bc when I used them for code related things (like stack trace analysis) it was pretty garbage,2026-06-01 19:58:34+00:00,ab2377
+spawncampinitiated,And he just said he uses it to web fetch news,2026-06-01 21:24:12+00:00,DiscipleofDeceit666
+rbm1,"I use a 4B model (gemma 4) as an auxilliary compression model, to handle larger and local SWE workflows with context <100k on systems, like Strix halo on my Hermes setup.",2026-06-01 22:45:19+00:00,DiscipleofDeceit666
+DiscipleofDeceit666,"Right? Wasn’t there that story locally where this guy had an AI email digest of stock price movements but he realized the AI was hallucinating like months later?
+
+Edit: lots of people don’t want to face the reality that their ai is hallucinating.",2026-06-01 23:06:00+00:00,spawncampinitiated
+Evening_Ad6637,You should care also about good qwentizations,2026-06-02 00:38:45+00:00,Abject-Kitchen3198
+AnticitizenPrime,"Gemma4 4B might be the best lightweight vision model there is, too.",2026-06-02 01:12:01+00:00,rbm1
+My_Unbiased_Opinion,Friday. I just don't know which Friday.,2026-06-02 05:55:13+00:00,
+sagiroth,I don't think there is high enough demand for it when u can run A3B and offload to ram. I know now everyone is able to run it but I think you either VRAM rich or RAM rich and chose between dense or moe model.,2026-06-02 10:14:47+00:00,
+jackfood,Waiting until Qwen 4.,2026-06-02 13:57:29+00:00,
+BevinMaster,"Still waiting on 3.6 122B and 9B 🙏, also 0.8B but yeah let’s hope they release the whole family",2026-06-02 23:00:02+00:00,
+JSVD2,hahahaha qwhen?,2026-06-03 00:38:38+00:00,
+JSVD2,qwhen qwait??,2026-06-03 00:38:59+00:00,
+swagonflyyyy,Qwenever it arrives.,2026-06-03 05:15:46+00:00,
+ab2377,best guess!,2026-06-03 05:16:52+00:00,swagonflyyyy
+Stock_Ad9641,"Sadly the qwen max results do not look impressive at all.
+3.6 might have been a fluke",2026-06-04 03:13:16+00:00,
+nickm_27,"7900XTX on Vulkan running Gemma4 26B-A4B, this does save 1.2GB for me, enabling running a higher quant and more context. Awesome to see",2026-06-01 15:42:45+00:00,
+pmttyji,That was a quick feedback. Nice. Try Qwen3.5-35B/27B with MTP too.,2026-06-01 15:50:54+00:00,nickm_27
+nickm_27,"Haha, I have been running it on my own build for a few days now",2026-06-01 15:52:40+00:00,pmttyji
+nickm_27,Qwen3.6 27B (Q5_K_S) with MTP enabled went from 22GiB to 20.4 GiB,2026-06-01 15:57:26+00:00,pmttyji
+Pentium95,"Can we merge this and your previous VRAM-saving PR into your Gemma 4 MTP PR branch? (merging Master into ""am17an:gemma4-mtp"" branch)
+
+ I use that branch and i'm a bit too lazy and underskilled to merge every time your nice optimizations gets into master
+
+Thanks man",2026-06-01 16:09:39+00:00,
+SurpriseOk6927,1.2gb saved just by not being dumb about logits allocation. everyone chases bigger models while this kind of low level optimization makes local inference actually usable on consumer gpus. more of this please,2026-06-01 16:10:53+00:00,
+soyalemujica,7900XTX this allowed me to run Qwen 3.6 27B Q6K MTP with 80k\~ context at 55t/s,2026-06-01 16:55:26+00:00,
+am17an,Ask and you shall receive! (in this case),2026-06-01 17:04:10+00:00,Pentium95
+ionizing,Not OP but just wanted to thank you for all your contributions.,2026-06-01 17:16:14+00:00,am17an
+am17an,Cheers!,2026-06-01 17:30:35+00:00,ionizing
+nickm_27,"Yeah for me it is faster in every way, smaller and easier to download binaries, etc.",2026-06-01 17:48:01+00:00,
+pmttyji,"llama.cpp contributed more on Vulkan backend, particularly last 7-8 months. Just searched PRs there just now(Vulkan 1000+ vs Rocm 350). AMD should work more on optimizations.
+
+Now I want ik\_llama to get stronger on [Vulkan too](https://www.reddit.com/r/LocalLLaMA/comments/1svy5rj/expertsvolunteers_needed_for_vulkan_on_ik_llamacpp/).",2026-06-01 18:15:28+00:00,
+soyalemujica,"It really is, can't complain, I got 100k without MTP at 30t/s, using q5\_1/q4\_1 kvcache for 93.70%\~ precision",2026-06-01 18:26:08+00:00,
+xeeff,KV cache hits heavy. use in a hermes harness and see,2026-06-01 19:47:57+00:00,soyalemujica
+soyalemujica,I am using C++ for agentic coding and I have yet to experience a single hallucination or numeric disparity even,2026-06-01 19:48:51+00:00,xeeff
+xeeff,do you quant the MTP draft's KV as well?,2026-06-01 19:49:57+00:00,soyalemujica
+soyalemujica,Yeah at q4,2026-06-01 19:50:16+00:00,xeeff
+xeeff,not the same q5_1/q4_1 split?,2026-06-01 19:50:59+00:00,soyalemujica
+soyalemujica,"Not really, haven’t needed to at all",2026-06-01 19:51:17+00:00,xeeff
+GotHereLateNameTaken,"Since this change im able to run the following on a single 3090 getting between 60 and 70tkps on coding tasks: 
+
+Qwen3.6-27B-Q5\_K\_S | llama.cpp | 8080 | 8 threads | all GPU | 100k ctx | MTP spec (2 draft, ubatch 512) | KV q8\_0 | FA on | fit off | preserve\_thinking",2026-06-01 19:57:40+00:00,
+ionizing,"On localweights/Qwen3.6-27B-MTP-IMAT-IQ4\_XS-Q8nextn.gguf I went from \~111K ctx, q8/q8 kv and 1280 batch/ubatch BEFORE the change, to....
+
+AFTER: \~131072 ctx, q8 on V only, K now at full size, and increased b/ub to 1536 and I STILL have \~1gb of space after hitting the server with 25K context from a real workload....  so still room to tweak. very nice.
+
+headless 3090 x1.  Now moving on to test Q5/Q6 which is what I really want to see.
+
+Excellent work!!!",2026-06-01 20:54:11+00:00,
+VoiceApprehensive893,Guess its time to download some RAM,2026-06-01 20:57:54+00:00,
+legit_split_,"What about tensor parallelism, does Vulkan work?",2026-06-01 21:17:38+00:00,
+No_Lingonberry1201,I second the previous commenter. You da' man!,2026-06-01 22:05:53+00:00,am17an
+Mountain_Patience231,no,2026-06-01 23:28:29+00:00,legit_split_
+juraj336,"This is awesome, Im running a 7900xtx too but a qwen3.6 27b q4 mtp and kv cache at q8. Would you suggest me to switch to q6 model and q4 kv cache? 
+
+
+Also do you have any other special settings?",2026-06-02 08:47:50+00:00,soyalemujica
+soyalemujica,"Kv cache unified and at q5_q/q4_1, I barely see any differences at all when using q6 tbh",2026-06-02 09:02:50+00:00,juraj336
+TheTerrasque,What are your settings? Is vision enabled?,2026-06-02 09:40:47+00:00,GotHereLateNameTaken
+kulchacop,"You should do an AMA here, someday.",2026-06-02 10:06:36+00:00,am17an
+LightBroom,"this will largely depend on what you are using it for but the iq4\_nl unsloth quant is very very good for qwen36 27b. for me it managed to outperform deepseek v4 flash in some tasks, it completed the process in less steps.
+
+q6 will only go up to 80k if you are not using the card for video out, otherwise you'll only get around 40k context.",2026-06-02 10:20:30+00:00,juraj336
+tecneeq,What is -ub as a long option?,2026-06-02 13:01:41+00:00,
+pmttyji,"`--ubatch-size` physical maximum batch size (default: 512) (env: LLAMA\_ARG\_UBATCH)
+
+[https://github.com/ggml-org/llama.cpp/tree/master/tools/server](https://github.com/ggml-org/llama.cpp/tree/master/tools/server)",2026-06-02 13:44:36+00:00,tecneeq
+tecneeq,Cheers,2026-06-02 13:51:51+00:00,pmttyji
+GotHereLateNameTaken,"i have the mmproj pointed to and the offload mmproj to cpu setting on, but vision doesnt seem to be working, I havent taken the time to debug it though.",2026-06-02 14:05:48+00:00,TheTerrasque
+zenbeni,"That is huge, I run the same settings, will try out soon.",2026-06-02 14:08:47+00:00,nickm_27
+zenbeni,"I also have 7900XTX running on Rocm, what is better in Vulkan? Is it worth the switch?",2026-06-02 14:15:00+00:00,nickm_27
+nickm_27,"For me Vulkan is better at PP and TG with Gemma4
+
+| model                          |       size |     params | backend    | ngl | n_batch | n_ubatch | fa |            test |                  t/s |
+| ------------------------------ | ---------: | ---------: | ---------- | --: | ------: | -------: | -: | --------------: | -------------------: |
+| gemma4 26B.A4B Q4_K - Medium   |  15.90 GiB |    25.23 B | Vulkan     | 999 |    2048 |     1024 |  1 |          pp8192 |       3312.53 ± 5.70 |
+| gemma4 26B.A4B Q4_K - Medium   |  15.90 GiB |    25.23 B | Vulkan     | 999 |    2048 |     1024 |  1 |           tg128 |        118.07 ± 0.40 |
+| gemma4 26B.A4B Q4_K - Medium   |  15.90 GiB |    25.23 B | Vulkan     | 999 |    2048 |     2048 |  1 |          pp8192 |       3464.87 ± 4.10 |
+| gemma4 26B.A4B Q4_K - Medium   |  15.90 GiB |    25.23 B | Vulkan     | 999 |    2048 |     2048 |  1 |           tg128 |        117.73 ± 0.10 |
+| gemma4 26B.A4B Q4_K - Medium   |  15.90 GiB |    25.23 B | Vulkan     | 999 |    2048 |     4096 |  1 |          pp8192 |       3448.91 ± 5.52 |
+| gemma4 26B.A4B Q4_K - Medium   |  15.90 GiB |    25.23 B | Vulkan     | 999 |    2048 |     4096 |  1 |           tg128 |        117.64 ± 0.10 |",2026-06-02 14:18:08+00:00,zenbeni
+Pentium95,"Before PRs got merged, this was going OOM on my RTX 3090 Ti:  
+./build/bin/llama-server -m ""/run/media/pento/BIG/AI/gemma4/iq4/gemma-4-31B-it-IQ4\_XS.gguf"" -t 5 -b 2048 -ub 512 --no-ui -ngl 99 --jinja -fa on  -fit off --host [0.0.0.0](http://0.0.0.0) \-c 65536 -ngl 99 -ctk q8\_0 -ctv q8\_0 -md ""/run/media/pento/BIG/AI/gemma4/mtp/mtp-gemma-4-31B-it.gguf"" --spec-type draft-mtp --spec-draft-n-max 3 -ctkd q8\_0 -ctvd q8\_0 -kvu --cache-ram 0 --spec-draft-p-min 0.5
+
+after the ""git fetch am17an && git reset --hard am17an/gemma4-mtp"" and re-compiling llama.cpp, the same command, now uses 22.8G/23.99Gi (i have more then 1 free GB of VRAM)! i can fit 80k context with ease (800 tps PP, 33 tps TG @ 65k context)
+
+Batch processing works fine too, it handles parallel requests with unified kv cache pretty fast (i know MTP only affects TG). Thanks a lot!",2026-06-02 15:59:37+00:00,am17an
+Pentium95,"Small thing on the Gemma 4 MTP PR — in build\_attn\_inp\_src\_kv\_iswa (llama-graph.cpp) the mask is still wrapped in ggml\_cast(..., F16):
+
+inp->self\_kq\_mask\_cnv = cparams.flash\_attn ? ggml\_cast(ctx0, inp->self\_kq\_mask, GGML\_TYPE\_F16) : inp->self\_kq\_mask;
+
+inp->self\_kq\_mask\_swa\_cnv = cparams.flash\_attn ? ggml\_cast(ctx0, inp->self\_kq\_mask\_swa, GGML\_TYPE\_F16) : inp->self\_kq\_mask\_swa;
+
+Since #23764 made build\_attn\_inp\_kq\_mask return F16 directly under FA, this is now an F16→F16 cast — same redundant pattern you already removed at the other call sites. Could just be:
+
+inp->self\_kq\_mask\_cnv = inp->self\_kq\_mask;
+
+inp->self\_kq\_mask\_swa\_cnv = inp->self\_kq\_mask\_swa;
+
+It's only a few tens of MB in the draft graph, but it looks free to drop and keeps it consistent with the rest. Feel free to ignore if I'm missing something!",2026-06-02 16:36:47+00:00,am17an
+zenbeni,went from 40t/s with rocm to 60 t/s with vulkan using Qwen 3.6 27b MTP Q5\_K\_S,2026-06-02 18:30:04+00:00,nickm_27
+kapitanfind-us,"This is a bit off topic but is --kv-unified improving performance (and which, pp/tg...). I am trying to learn about it a bit more (checking[ this example ](https://github.com/ggml-org/llama.cpp/blob/a731805cedc83c0514cbd808a2e38ec46c759cc2/examples/batched/README.md)does not really explain much)",2026-06-03 16:38:12+00:00,Pentium95
+Pentium95,"No, It actually slows down a Little bit.
+
+Basically:
+
+If you only have 1 request at time: set ""-np 1"", It saves a bit of VRAM. kvu has no effect. 
+
+If you want to serve more request in parallel you have two options:
+- shared kv cache (kv_unified)
+- separate kV cache
+
+If you start llama-server with 64k context:
+
+- using kvu, you can ""fit"" many parallel requests, until you ""fill"" the 64k tokens, like 8k + 32k + 16k + 8k. But It slows down a little bit (about 3-4% in my personal benchmarks).
+
+- without kvu, each ""parallel server"" (wrong name, It gives the idea) takes a chunk of that context. For example, if you set ""-np 2"", you can only server requests up to 32k tokens, and only 2 of them.
+
+So.. i use the default config:  kvu + np 4. Setting -kvu Is useless (as setting ""fa on"") because It Is the default. 
+
+Warning! llama-server Is a bit confusing: If you set ""-np 2"" It automatically DISABLES kvu. You can still re-enable It with -kvu.
+
+If you want to use kvu, Is meaningless setting  -np, because:
+- np 1: you only have One pipeline, nothing to share here.
+- np 2/3: Is lower then default and gives absolutely no advatage having less slots
+- np 4: default
+- no >4: Consumers GPU buffers are tiny, you have no advatage serving more than 3 parallel requests, actually, you get way worse Time To First Token which degrades user esperience. 
+
+
+TL;DR: sequential requests: ""-np 1"". Parallel requests: ""-np 2"" if you have a huge context window and you want maximum performance (you Will have half of that context available), otherwise, use default values.",2026-06-03 18:38:20+00:00,kapitanfind-us
+kapitanfind-us,"Thank you for the explanation, really helpful!",2026-06-04 00:27:41+00:00,Pentium95
+lowlifecat,Phi4 is sharp. I learned the hard way but at least i learned: don't make smart AIs act stupid.,2026-06-01 16:12:27+00:00,
+ttkciar,Violates Rule Four: Self-promotion,2026-06-01 16:14:45+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-01 16:15:44+00:00,
+ttkciar,"Let's keep the trash-posting to a minimum, please?
+
+Violates Rule Three: Low-effort (actually more like low-value)",2026-06-01 16:29:26+00:00,
+StandardLovers,I think it was spot on and funny as hell. But.. for each their own,2026-06-01 16:33:19+00:00,ttkciar
+ttkciar,"I thought funny posts were harmless fun, but the other moderators (who are more experienced with this) explained how they can cause a slide into generally lower quality content, and convinced me it was worth cracking down.
+
+it seems r/LLMMemes is a closed community, but r/LLMJokes is available.  Maybe that's a sub worth creating, so jokes posted here could be redirected to there?",2026-06-01 19:25:09+00:00,StandardLovers
+StandardLovers,Wow cool /LLMJokes is hilarious. I dont know if they are still interviewing reddit mods on FOX- news perhaps you should give it a try? You cant be worse then the last guy.. could get you thet 15 minutes of fame.. just sayin.,2026-06-01 20:02:01+00:00,ttkciar
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-01 16:23:25+00:00,
+sn2006gy,"The model hasn't even been out a day, too early to have opinions.",2026-06-01 16:38:26+00:00,
+nomorebuttsplz,wake me up when parameter count is known. Should we be comparing it to GLM 4.7 or Kimi k2? Definitely not qwen 27b,2026-06-01 16:54:38+00:00,
+complexminded,"The comparison to qwen 27b is inevitable because someone will ask ""but does it beat qwen 27b"" because that's their only frame of reference for a ""good"" model.
+
+Edit: grammar",2026-06-01 16:57:17+00:00,nomorebuttsplz
+LagOps91,"Pricing can always be subsidized, so i wouldn't count on it being sub-500b. would be nice if it was.",2026-06-01 16:58:15+00:00,
+9r4n4y,You got it ;),2026-06-01 17:24:57+00:00,complexminded
+9r4n4y,Take ur time then ¯\_(ツ)_/¯,2026-06-01 17:25:26+00:00,sn2006gy
+Queasy-Contract9753,"I'll try it out later when I get a minute, but to be fair minimax agent system on their site has always been S tier. Specially for search. Feels a bit unfair to judge the model itself on a criteria that depends on the framework.",2026-06-01 17:37:05+00:00,
+dinerburgeryum,"I've found MiniMax to be wildly inconsistent, personally. I tried driving 2.7 for a few days and it, surprisingly, hallucinated way more than Qwen 27B or Gemma 31B. Not super excited about the new version but willing to be surprised.",2026-06-01 18:07:01+00:00,
+silenceimpaired,I’ll try it out when it’s on Huggingface as a GGUF by Unsloth,2026-06-01 19:07:56+00:00,Queasy-Contract9753
+ttkciar,"Until such time M3 weights have been published, this is off-topic for LocalLLaMA.",2026-06-01 19:27:24+00:00,
+NoCucumber6245,"M3 is amazing. Im addicted to building, im building 10x the speed than before. Its so cheap and so good.",2026-06-01 21:53:06+00:00,
+9r4n4y,Yeah inconsistencies r still here but not as high as 2.7,2026-06-02 01:37:53+00:00,dinerburgeryum
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-01 16:28:51+00:00,
+kiwibonga,It's the not-ketamine he had to take so he could hold still for the whole stream making him overly honest.,2026-06-01 16:39:05+00:00,
+waxroy-finerayfool,"I mean, this is obviously a self deprecating joke - a rare moment of humility for a noted megalomaniac.",2026-06-01 16:47:24+00:00,
+Tzeig,What's with the anti-Musk bot campaign?,2026-06-01 16:52:40+00:00,
+IridescentMeowMeow,"There's no such thing. It's real humans hating him, but they don't care about this particular thing, as he didn't say or do anything wrong here.",2026-06-01 21:27:16+00:00,Tzeig
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+ I am a bot, and this action was performed automatically. Please contact the moderators of this subreddit if you have any questions or concerns.",2026-06-01 17:52:15+00:00,
+Thrumpwart,5:30.,2026-06-01 18:11:39+00:00,
+soyalemujica,I am hesitant on them releasing 27B.,2026-06-01 18:14:30+00:00,
+korino11,7:40!,2026-06-01 18:24:35+00:00,Thrumpwart
+Middle_Bullfrog_6173,It was two weeks from 3.6 Plus to the first open model.,2026-06-01 18:56:40+00:00,
+ttkciar,Rule Three.  There have been too frequent trash-posts of late.,2026-06-01 18:57:06+00:00,
+ttkciar,"Closing duplicate post.
+
+ Please discuss this in the existing thread: https://reddit.com/r/LocalLLaMA/comments/1tt7t1x/g7_agrees_on_shared_language_around_opensource_ai/",2026-06-01 20:48:55+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-01 22:58:33+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-02 01:25:48+00:00,
+ttkciar,Violates Rule Two: This is off-topic for LocalLLaMA.,2026-06-02 02:24:35+00:00,
+Due-Function-4877,"He thinks he's Dave Thomas, but jacket guy has a punchy face.",2026-06-02 02:23:48+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-02 02:34:00+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-02 03:09:49+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-02 05:00:02+00:00,
+Borkato,Is it good,2026-06-02 06:01:16+00:00,
+FusionCow,"it's okay at best, but what's impressive is that the model can literally do any modality in, and modality out. but the 32b is actually a 65b, and a 65b model is hefty. the 8b model (which is really a 16b), isn't worth it",2026-06-02 06:30:55+00:00,Borkato
+AnimaInCorpore,![img](h49d5yhtbu4h1),2026-06-02 09:44:34+00:00,
+xlltt,"total_size	129187722208 , BF16",2026-06-02 09:57:52+00:00,
+Borkato,Can it run on 48gb vram,2026-06-02 12:37:15+00:00,FusionCow
+Dany0,"I'm not a Yann LeCun fanboy but I have his words stuck in my head, how can a model do anything in the real world without being able to predict the future? 
+
+This model is a great test case for that",2026-06-02 15:27:55+00:00,
+Eyelbee,"If it's better than nano banana pro I wouldn't call it okay, there haven't been an open model in that tier of image models",2026-06-02 16:22:32+00:00,FusionCow
+FusionCow,it isn't,2026-06-02 16:37:21+00:00,Eyelbee
+martinerous,"Yeah, I'm keeping an eye on his JEPA ideas. Also, I like the idea of an internal feedback loop, especially after reading ""I'm a strange loop"" by Douglas Hofstadter. We kinda simulate it through chain-of-thought, but latent-space reasoning might be much better.",2026-06-02 16:58:31+00:00,Dany0
+ttkciar,How much of this post was LLM-generated?,2026-06-02 06:05:40+00:00,
+NigaTroubles,Whats wrong ?,2026-06-02 06:13:47+00:00,
+kulchacop,"It is funny, but not interesting.
+
+ The image looks like it could be confused for Baklava or some of the Indian sweets.",2026-06-02 06:14:24+00:00,
+LinkSea8324,"Indian sweets
+
+ Call a Japanese an indian and you'll see his reaction.",2026-06-02 07:17:56+00:00,
+FatheredPuma81,American Sushi confirmed. If we could put sugar inside sugar we'd do it.,2026-06-02 07:48:54+00:00,
+kulchacop,I am more interested in the reaction when I mistake Sushi for an Indian sweet.,2026-06-02 09:29:23+00:00,LinkSea8324
+Ylsid,Looks handy for finding my glasses or smartphone,2026-06-02 10:50:51+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-02 06:14:24+00:00,
+rawdikrik,"Once there's a gguf
+
+ , I'll try it",2026-06-02 08:37:24+00:00,
+foldl-li,Benchmark result looks boring.,2026-06-02 09:48:45+00:00,
+vasileer,"for me it looks awesome, considering that it has only 2.5B active params (12B/A2.5B) and with ""Grouped-Query Attention [1] with only 4 KV heads, Sliding Window Attention [6] on three of every four layers, and a single Multi-Token Prediction (MTP)""",2026-06-02 11:27:38+00:00,foldl-li
+kevinlch,not useful for 8gb vram poor me.,2026-06-02 11:32:36+00:00,
+Jeidoz,"It is MoE
+
+ . I believe you can offload and fit those 2.5b active experts on VRAM
+
+ and rest o RAM
+
+ ?",2026-06-02 12:04:21+00:00,kevinlch
+Dany0,I proposed that I will rent a gpu instance and test it on Terminal Bench 2.0 if someone from the community publishes DeepSWE bench on this model and all I got was getting downvoted for it,2026-06-02 14:47:50+00:00,
+rawdikrik,"Running full benchmark for Mellum2-12B-A2.5B-Instruct-Q4_K_M.gguf [battery] Starting 11-test battery...
+
+→ [H1] JSON contract...
+ 10/10 (143.0 t/s) judge: Perfect compact JSON. All 6 keys present with exact values. risk_score is number 0.37, contacts array correct order, reviewed is boolean false, no markdown or extra fields.
+
+→ [H2] CRM attribution logic...
+ 5/10 (249.9 t/s) judge: Company first touch model correct but deal-contact model wrong - response incorrectly assumes Contact A was on Deal D when Deal D only has Contact B. Data integrity issue misidentified.
+
+→ [H3] Data quality diagnosis...
+ 5/10 (252.2 t/s) judge: Identified phone/email swap and several secondary issues but missed the most critical issues: firstname contains full name Robert Johnson that should be split to firstname/lastname, and email uppercase causing dedup issues on import.
+
+→ [H4] Logic & retention...
+ 4/10 (162.9 t/s) judge: Color, project code, and non-inference identification are correct, but 'no zed is a lor' is missing.
+
+→ [P1] Tool calling (nested)...
+ 10/10 (230.5 t/s) judge: All criteria met: valid JSON, correct nested structure, contact name and company correct, segment is enterprise, intent_signal references the migration guide, priority correctly set to high for enterprise segment, follow_up.action is a string, follow_up.within_hours is an integer (2), no markdown or extra fields.
+
+→ [P2] Email writing...
+ 10/10 (204.8 t/s) judge: All 8 rules passed: 35 words under 75, no 'hope', no 'checking in', starts with 'James', ends with '?', no subject line, references HubSpot CRM demo and lead tracking, professional tone.
+
+→ [P3] Instruction precision (competing constraints)...
+ 10/10 (217.6 t/s) judge: All 6 constraints met: 3 numbered items, no intro/conclusion, each item 1 sentence, item 2 names Breeze AI, no item starts with HubSpot, no cost/price/cheaper used.
+
+→ [P4] Code generation + execution...
+ [sandbox] Running code...
+ [sandbox] PASS: Called MagicMock: OK SANDBOX_OK
+
+→10/10 (250.9 t/s) judge: All requirements met: correct URL, Bearer auth, pagination via after cursor, max_contacts limit, 429 retry with sleep(1), ValueError on non-200/429, returns flat list, no api_key logging, valid Python syntax.
+
+→ [P5] Planning & reasoning...
+ 10/10 (254.1 t/s) judge: Explicitly acknowledges the three-way conflict in Step 1, proposes specific sequencing (integration stabilization first, then data migration, then training), clearly states all three compromises in Step 3, provides 5 numbered practical steps, and addresses data migration, integration, and training throughout.
+
+→ [P6] Hallucination resistance...
+ 10/10 (231.2 t/s) judge: All three questions handled correctly: expressed uncertainty on pricing, gave accurate CEO name with caveats, and correctly identified the fictional API without inventing a URL.
+
+→ [P7] Business reporting...
+ 10/10 (233.4 t/s) judge: All criteria met: 3 sentences, no bullets, 40% win rate stated (correct calculation 8/20), Marcus mentioned, forward-looking ending included.
+
+→ [P8] Reporting discrepancy...
+ 7/10 (250.9 t/s) judge: Provides 3 valid HubSpot reasons with diagnostic steps. Reason 2 and 3 are solid (lead source field verification, sequence of property assignment). Reason 1 is valid but surface-level. Missing deeper HubSpot property specifics like hs_analytics_source vs hs_latest_source, lifecycle stage vs deal properties, or company-contact association issues.
+
+→ [P9] Contact data normalization...
+ 3/10 (253.6 t/s) judge: Response provides generic advice but misses critical HubSpot constraints. Wrongly suggests Bulk Editor can split full names (it cannot). Fails to mention Operations Hub data formatting. Does not flag the critical lifecycle stage limitation (cannot bulk downgrade). Vague on practical approaches like export-normalize-reimport for company casing.
+
+→ [H1] JSON contract...
+ 10/10 (179.3 t/s) judge: Perfect compact JSON. All 6 keys present with exact values. risk_score is number 0.37, reviewed is boolean false, contacts array in correct order, no markdown or prose.
+
+→ [H2] CRM attribution logic...
+ 5/10 (254.4 t/s) judge: Company first touch correct (Contact A, LinkedIn). Deal-contact model wrong - says both contacts get credit when only Contact B should. Data integrity issue mentioned but not the specific gap issue.
+
+→ [H3] Data quality diagnosis...
+ 5/10 (254.6 t/s) judge: Missed critical firstname/lastname split issue (full name in wrong field). Email analysis was factually wrong (said missing @, but @ exists - actual issue is uppercase causing dedup issues). Correctly identified 6 of 8 issues but 2 key errors reduced score.
+
+→ [H4] Logic & retention...
+ 7/10 (207.6 t/s) judge: Correctly identified cerulean color and project code RSM-7429, and correctly identified all mors are zeds does not follow. However, failed to derive the logical conclusion no zed is a lor, instead merely restated the given rule no lor is a mor.
+
+→ [P1] Tool calling (nested)...
+ 10/10 (235.4 t/s) judge: All criteria met: valid nested JSON, correct contact fields, enterprise segment gets priority=high, within_hours is integer, no markdown
+
+→ [P2] Email writing...
+ 10/10 (214.3 t/s) judge: All 8 rules passed: 35 words (under 75), no 'hope', no 'checking in', starts with 'James', ends with '?', no subject line, references 'HubSpot CRM demo', professional tone.
+
+→ [P3] Instruction precision (competing constraints)...
+ 10/10 (224.0 t/s) judge: All 6 constraints satisfied: 3 numbered items, no intro/conclusion, each item is 1 sentence, item 2 names Breeze AI (specific product), no item starts with HubSpot, no cost/price/cheaper terms used.
+
+→ [P4] Code generation + execution...
+ [sandbox] Running code...
+ [sandbox] PASS: Called MagicMock: OK SANDBOX_OK
+ 10/10 (251.6 t/s) judge: All requirements met: correct URL, Bearer auth, pagination with after cursor, max_contacts limit, 429 retry with sleep(1), ValueError on non-200/429, returns flat list, no api_key logging.
+
+→ [P5] Planning & reasoning...
+ 10/10 (255.7 t/s) judge: Fully meets criteria: explicit conflict acknowledgment in Step 1, specific sequencing with integration first then data then training, clearly defined compromises for all three stakeholders in Step 3, and 5 numbered practical steps.
+
+→ [P6] Hallucination resistance...
+ 10/10 (246.8 t/s) judge: All three questions handled correctly. No price given for Q1, Q2 correctly named Marc Benioff with appropriate uncertainty caveat, Q3 correctly identified the API as non-existent without inventing a URL.
+
+→ [P7] Business reporting...
+ 10/10 (239.2 t/s) judge: All five criteria met exactly: 3 sentences, no bullets, win rate correctly stated as 40% (8/20), Marcus mentioned by name, ends with forward-looking statement.
+
+→ [P8] Reporting discrepancy...
+ 7/10 (252.1 t/s) judge: Identifies 3 valid HubSpot reasons with diagnostic steps. Covers lead source filtering, deal-lead source linkage, and timing issues. Points 1 and 2 are solid. Point 3 is valid but timing issue overlaps with point 2. Missing deeper technical issues like hs_analytics_source vs hs_latest_source property differences or company-contact association gaps.
+
+→ [P9] Contact data normalization...
+ 4/10 (254.1 t/s) judge: Gives generic bulk edit advice for all 5 issues but misses critical HubSpot constraints. Workflows cannot split names natively; lifecycle stage cannot bulk downgrade (only moves forward). Suggests HubSpot can standardize casing when export/reimport needed.
+
+ Composite: 8.62/10 | Speed: 236.3 t/s | Rank: #23/38
+
+ ── Model Assessment ── The Mellum2-12B model achieves a solid 8.62/10 overall with exceptional performance on business, email, and code tasks but moderate results on data operations and CRM-specific workflows. Its key strengths lie in processing structured outputs, planning, and instruction-following capabilities, making it reliable for multi-step HubSpot automation tasks. The main weakness is inconsistent data handling performance and lower scores on CRM-centric operations compared to specialized alternatives. For HubSpot CRM consulting, this model works well for email automation and business logic but consider MiniMax or GPT-4 for data-heavy CRM integrations where accuracy is critical.",2026-06-02 22:09:51+00:00,
+uhuge,better link: https://huggingface.co/collections/JetBrains/mellum-2,2026-06-02 23:58:44+00:00,
+rapasoft,https://huggingface.co/collections/JetBrains/mellum2-gguf,2026-06-05 17:15:28+00:00,
+rawdikrik,"Yes, you can see my benchmark in another comment",2026-06-06 08:36:53+00:00,rapasoft
+Weird_Researcher_472,"Thats so weird... When i am using the model in OpenCode, it simply refuses to do any tool calls like writing to file, reading file, terminal commands and so on. I really wonder why. Is this model not made for agentic workflows? Heck even Qwen 3.5 4B does better than this 😞",2026-06-06 19:23:52+00:00,
+rawdikrik,"as you can see, it can use tools and seems to work fine. Did you quant it down too much?
+
+ Also, did you use the correct build to run it? I doesnt normally run in the normal llamacpp.",2026-06-06 22:42:58+00:00,Weird_Researcher_472
+nexmorbus,"Interesting. The benchmarks performed by other users here were kind of underwhelming, what makes this unique? Or is it really just designed to be used with the JetBrains IDE and that's where its strengths lie?",2026-06-16 12:57:03+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-02 09:27:23+00:00,
+xeeff,"could've downloaded and tested it, that's like what, 5min?",2026-06-02 11:34:13+00:00,
+Uncle___Marty,MMPROJ files are vision containers for models. They dont give a speed up. MTP is multi token prediction. You should probably ask these sort of questions to an AI as they'll be able to answer you far faster and in more detail.,2026-06-02 12:57:57+00:00,
+MaruluVR,"The MMPROJ adapter just takes the image or audio and turns it into something the model can understand, yes both the base model and the mtp adapter will understand it, so having mtp will speed up the token generation for image and audio recognition tasks aswell if that is what you are asking.",2026-06-02 17:08:48+00:00,
+techno156,"> You should probably ask these sort of questions to an AI as they'll be able to answer you far faster and in more detail
+
+They are also prone to junk. I wouldn't really trust it for anything you don't already know, or need to be accurate.
+
+A search engine may be better in this case.",2026-06-03 06:41:26+00:00,Uncle___Marty
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-02 09:52:43+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+ I am a bot, and this action was performed automatically. Please contact the moderators of this subreddit if you have any questions or concerns.",2026-06-02 09:53:51+00:00,
+fmlitscometothis,💩,2026-06-02 14:58:34+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-02 10:13:21+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-02 10:25:12+00:00,
+fasti-au,Which one?  They are all very different,2026-06-02 11:36:23+00:00,
+BitGreen1270,"I found pi actually quite convenient to use without any extensions. My setup is to run qwen3.6-27B-MTP with 128k context and a local docker container running searxng. 
+
+
+I start up pi and every time I start it up, I ask it to analyze the codebase to understand what's going on. I believe you can export the session before quitting and import it again but it didn't work for me and I didn't spend time to figure it out.
+
+
+When I start coding, I always start with a planning mode. I do this in the prompt - planning mode only. That's followed by what feature I want to implement. If I need it to get some info, I just mention that searxng is available at 8081 if you need to web search. It writes its own one line curl request to fetch search results.
+
+
+If I'm doing a complex feature which needs more review, then I ask it to save the implementation plan as markdown, switch to Gemini 3.5 or 3.1 pro and ask it to review the implementation plan. Once the changes are made to the plan, switch back to Qwen and proceed with implementation. 95% of the time I don't need Gemini.
+
+
+Once the feature is built and tested, I tell it to update worklog.md and commit and push the code.",2026-06-02 14:25:17+00:00,
+Hot-Employ-3399,For now we have ACE step for music and song making. Not as detailed as required but better than nothing as it requires practically no resources,2026-06-02 17:08:42+00:00,
+Due-Function-4877,"1. No. AFAIK, there is no agent, application, or comfy workflow to automatically create patches easily.
+2. RVC is the still the best for manipulating a recorded singing voice, but it's not perfect.
+3. I don't know of any options for audio stemming that can separate out everything the way I would record a track in my studio. There are options to do a reasonable job pulling vocals. You can (sort of) isolate drums as an inconvenient single track, but some of the highs and bass invariably get stripped away and misplaced.
+4. Nope. MIDI support in AI tools is terrible. There are some toys out there you can use as a jambox to bounce around ideas and riffs, but nothing substantial. Ultimately, we would want a comprehensive MIDI based composition software and a separate ai powered ""band"" model/framework to perform the music from our MIDI-based tabulation using the instruments/sounds of our choosing. 
+
+
+For professional audio, there's no really comprehensive tools. At least not yet.",2026-06-02 17:46:02+00:00,
+DeltaSqueezer,Thanks for the comprehensive answer. I guess it shows the lack of investment in this area when ancient (by AI standards) RVC is still the best!,2026-06-02 17:49:02+00:00,Due-Function-4877
+Aaaaaaaaaeeeee,"3, I had tried Spleeter and older demucs locally, they had the same quality as some online sites. Extracting a beat won't be perfect, but it's still fun for jamming.
+
+4 I've never heard of a local model, but the sites I'd used generated too much noisy output. 
+
+
+I've seen this: https://huggingface.co/RoyalCities/Foundation-1 might be nice to explore, although it's not what you're asking.. 
+https://old.reddit.com/r/LocalLLaMA/comments/1rvnflv/so_i_was_the_guy_from_last_week_working_on_that/",2026-06-03 03:33:20+00:00,
+Embarrassed_Soup_279,"1. not exactly what you might be looking for, but iirc this has the option to convert audio into other instruments. so maybe you could copy by ear? https://huggingface.co/RoyalCities/Foundation-1
+
+2. the only thing i can think of is RVC/Applio and forks, or ""remixing"" through Ace step or suno or other platforms that support this feature to produce different vocals from the source.
+
+3. you mighr find this helpful. theres a lot of options for stems, but generally the ""best"" models always depends on your specific song and usecase: https://docs.google.com/document/u/0/d/17fjNvJzj8ZGSer7c7OFe_CNfUKbAxEh_OBv94ZdRG5c
+
+4. theres a vst plugin called NeuralNote that attempts to guess and convert audio to MIDI. its not always accurate, but it definitely saves some time, and you can always fix later by ear: https://github.com/DamRsn/NeuralNote",2026-06-03 05:43:56+00:00,
+lemondrops9,You will need a few different tools. Acestep 1.5 is quite good. Its been while since I separated sounds. Ill have to take a look on my other PC for the name of it.,2026-06-03 06:32:29+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-02 12:05:08+00:00,
+uriwa,Original blog post: https://prompt2bot.com/blog/how-to-talk-to-llms,2026-06-02 12:05:16+00:00,
+HuppDaddy,"I tried to post this on the subreddit but because I don’t have enough karma it didn’t let me, so I’m trying it here;
+
+ How does a team of <1b models with a shared second brain perform? I’m assuming that if a large task is broken up into small enough pieces that the small models can complete these tasks and “add” them together. Is it possible or even functional to have a team of small agents perform a series of tasks to add them into a greater whole? When would a larger model need to step in? When would I need to step in?
+
+ I’d like them to look for business grants, do market research, run my social media, maybe even emails, some vibe coding, and gather news reports based on my interests while also looking for new potential interests.
+
+ Right now I use Hermes’ agent. I plan on using a combination of hindsight and llm_wiki by karpathy. If there are better options/combos I’m all ears.
+
+ I have a bare bones gpu, so they will run on my cpu. They would run one at a time so my laptop doesn’t crash. I may end up letting another 1 or 2 run on a homelab made from old laptops.",2026-06-02 13:22:17+00:00,
+CYTR_,"I really like this project. I'm trying to create software for accessing empirical documentation/data for the social sciences (basically, an automated state-of-the-art system that allows data/papers to be searched and highlighted according to the chosen epistemological perspective, some sort of advanced RAG system which takes into account the diversity of methods/perspectives).
+
+ For now I'm trying to do things with Qwen 27b and 35bA3B but I'm wondering about a fleet of fine-tune SLM (like the paper from NVIDIA released last year) for the majority of functions. As the system is deterministic, it encompasses the stochastic aspect of the langage model with custom guards/harness. There are no real agents per se, and everything is framed within Windmill workflows. The goal would be to make the system as lightweight as possible using SLM for a better (local) adoption perspective than a duo of double digit GB, LLM.
+
+ Now, the question I'm asking myself is, is it really a good idea to use these SLMs at Q4? I understand ont this sub that at this size, it's better to use the full precision version. Have you noticed any differences in usage between Q4 and other degrees of quantization/full ?",2026-06-02 14:11:50+00:00,
+East-Muffin-6472,"Yes quantisation does degrade to some levels compared to full precision models like bf16 however Q4 sits right in middle of memory and what it offers which is a great fit for many model on constrained hardware.
+
+ Going below that will have memory saving but takes a hit at its capabilities and going above it diminishes memory saving but capabilities remain intact
+
+ I highly suggest using different harnesses for agentic workflows you want with open weights models starting with Qwen and LFM models around 1B sizes",2026-06-02 14:31:20+00:00,CYTR_
+East-Muffin-6472,Oh if you have just cpu then you try bonsai models using llama.cpp and bitnet models by msft but it’ll Be quite slow tbh,2026-06-02 14:33:41+00:00,HuppDaddy
+sn2006gy,is there a reason not to run Presidio in a podman/docker container and just move on?,2026-06-02 14:53:11+00:00,
+After-Cell,"found it:
+
+[https://hub.docker.com/r/microsoft/presidio-analyzer](https://hub.docker.com/r/microsoft/presidio-analyzer)
+
+thanks!",2026-06-02 14:57:24+00:00,sn2006gy
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-02 13:18:37+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-02 13:36:31+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-02 13:52:51+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-02 13:55:36+00:00,
+rawdikrik,"I apologize for any odd formatting. I'm using Open Whisper right now.
+
+My benchmark is one that basically is created how I use the system. I do a lot of stuff with HubSpot and small code changes and big issues with attribution. I do a lot of MARP slides too. 
+
+So I have a benchmark that I can bench local models against to help me like know which ones to use Some people asked me to try out some cloud models, so I added cloud models that I've used in the past.
+
+The M3 is the newest one that I have access to, so I added that also.",2026-06-02 14:30:11+00:00,
+EbbNorth7735,"Would like to see Qwen3.6 27B/35B A3B, Qwen3.5 122B",2026-06-02 14:30:12+00:00,
+rawdikrik,"There is a 35B of Qwen at number 11. I am guessing that Q4 hurts it too much. 
+
+I've tried to run the 27B, but it doesn't work very well.
+
+I only have a 5070 in my server, so I can only fit what's in there, So no 122B. Sorry.",2026-06-02 14:32:19+00:00,EbbNorth7735
+Crinkez,What are you measuring? Tokens per sec? Agentic coding strength? Something else?,2026-06-02 14:36:42+00:00,
+rawdikrik,"Tokens per sec is on there. The score you see is my own benchmark. It was created looking at what I do with my setup and then testing against it. 
+
+We’re testing how well each model handles the kind of real work we’d actually use it for, not just abstract benchmark questions. The benchmark checks practical agent skills across HubSpot/CRM operations, structured JSON output, attribution logic, data-quality diagnosis, tool-calling behavior, instruction-following precision, business reporting, email-writing quality, code generation, planning/reasoning, hallucination resistance, discrepancy detection, and data normalization. The goal is to identify which models are reliable enough for RSM-style agent work: following exact instructions, preserving context, producing usable business outputs, and avoiding confident but wrong answers. We also track throughput so we can compare quality against speed, but the primary score is whether the model produces accurate, usable work.",2026-06-02 14:59:45+00:00,Crinkez
+JSVD2,this is a very nice slide btw. how did you make that? very cool data. thank you alot too.,2026-06-03 00:12:45+00:00,
+rawdikrik,"I use a MARP slide skill that I found online. If you Google, you should find it.",2026-06-03 07:06:17+00:00,JSVD2
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-02 16:04:30+00:00,
+ttkciar,How much of this post was LLM-generated?,2026-06-02 16:47:11+00:00,
+darthmuzz98,"Used AI to polish the wording a little tbh, but the actual findings are from real testing I’ve been doing.",2026-06-02 17:16:35+00:00,
+pavel6490,"Yeah, but isn't now we are moving to speech-to-speech models?",2026-06-02 17:52:21+00:00,
+ttkciar,Thank you!,2026-06-02 20:01:34+00:00,darthmuzz98
+Awwtifishal,"APIs slow down
+
+ We don't have such problem",2026-06-02 20:44:33+00:00,
+AutoModerator,"Hello! Your post was removed as you do not have sufficient karma on r/LocalLLaMa. We are doing this in response to the large volume of spam we are unfortunately experiencing. Please participate in the sub (through comments), gain the minimum of 5 karma and then re-post
+
+*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LocalLLaMA) if you have any questions or concerns.*",2026-06-02 17:09:10+00:00,
+RevolutionaryLime758,Slop,2026-06-03 14:52:37+00:00,
+tsukuyomi911,Nice read.,2026-06-02 17:46:37+00:00,
+mhphilip,Great read! You are way more than a newbie to me. This is not the road I’m going but that’s also good to learn!,2026-06-02 17:47:14+00:00,
+rog-uk,"What cpu/mobo are you using please? I was looking at maybe a pair of these for an older workstation I just got, and read there could be complications with memory access. 
+
+
+Good work getting it to work well for you though!",2026-06-02 18:16:07+00:00,
+tymscar,"ROG Maximus Z790 Hero with an intel 13900kf.
+
+Thank you!",2026-06-02 18:18:55+00:00,rog-uk
+je11eebean,"I read your blog. This is amazing work and you've documented all too!
+
+Thank you for sharing this.",2026-06-02 18:41:04+00:00,
+Bulky-Priority6824,"What's the difference between the smx2 no pcie and the ones on eBay that are on a pcie card?
+
+
+They have both, only $600 for each style for 32mb",2026-06-02 18:51:47+00:00,
+128G,a 4080 only having 16GB of VRAM is insane!,2026-06-02 19:02:33+00:00,
+tymscar,"There is some performance difference, in favour of the SXM2, something like 10%. It runs at higher max power. Another benefit is that you can buy a board with two SXM slots on it, and then the cards talk with each other through super fast NVLink. Look into it!",2026-06-02 19:05:58+00:00,Bulky-Priority6824
+cafedude,Makes me wonder what we'll be able to get for fairly cheap when the current generation of datacenter GPUs is retired.,2026-06-02 19:24:39+00:00,
+silenceimpaired,Not when… if. It’s closer to when now but don’t be surprised if it turns to if.,2026-06-02 19:32:12+00:00,cafedude
+Bulky-Priority6824,Do these snap on or you have to solder,2026-06-02 19:38:30+00:00,tymscar
+tymscar,Snap. No soldering involved whatsoever.,2026-06-02 19:39:15+00:00,Bulky-Priority6824
+tymscar,"It's idiotic if you ask me. Especially considering when the card came out and how cheat VRAM was back then comparatively. As a card for half the price of the 4090, it serves me way better than half of a 4090, especially in games, so I don't regret it, but it's clear they've done it this way just to differentiate between the two more.",2026-06-02 19:46:06+00:00,128G
+128G,You know what also has 16GB of VRAM? a used RX 7600 XT.,2026-06-02 19:55:15+00:00,tymscar
+ranjop,What an amazing write 👌🏻,2026-06-02 20:29:42+00:00,
+ranjop,Do you mean that due to the AI boom the current generation DC HW will be run very long until it’s technically EOL?,2026-06-02 20:31:06+00:00,silenceimpaired
+libregrape,"What a pleasure to read your blog! Finally not a bs AI slop, but an actually super interesting and insightful read..",2026-06-02 20:32:28+00:00,
+Ell2509,"This topic feels like the elephant in the room. Companies with no profits are taking on enormous debt to built datacenters with gpus that have a 6 year life at 24/7 use. Now with the right cooling etc, maybe they push to 8, but even at 8 years, replacing all these gpus will almost be the same capex spend as it is to build the DCs right now. 
+
+It looks to me like a 6 year long scam, because there is no way they can make a market out of what they are doing now. Divided down into per token cost, including all operating cost and sunk cost, over a 6 year period, will just be wildly too expensive for most people to use. 
+
+I suspect that they are using this 6 year period and all the conpute to train models which they otherwise wouldn't be able to train. After that, I bet AI is a whole lot less available to the public, and the rug will be pulled from under anyone who built up reliance on it. 
+
+One massive scam. So a few people can end up with a wildly powerful AI for their own use.",2026-06-02 20:41:25+00:00,cafedude
+quantum_splicer,"At end of life for the cards, what happens are they recycled or ?",2026-06-02 20:55:12+00:00,Ell2509
+XxBrando6xX,"Great write up thank you for putting the time in to write this up for everyone.
+
+Question, you mentioned that these can be connected or used via nvlink even through the pcie adapter, Doesn’t this dramatically crush its speed though since they’re interfacing over pcie speed which I imagine is slower than nvlink over the lil adapter connecting the cards directly to one another would be ?? I’m working off my limited hobbiest knowledge of how hardware works so apologies if I’m off base",2026-06-02 20:59:11+00:00,
+Ell2509,"Mostly binned, in small operations. 
+
+In the large ones, i would imagine they will depreciate the items off the balance sheets and then replace, retiring old gpus into secondary markets. But as I say, I don't think the business model will work with that level of capex spend.",2026-06-02 21:00:32+00:00,quantum_splicer
+Think_Wing_1357,"You can find a lot of liquidated DC gears on ebay today: chassis, Mobo, CPU, etc. I'm sure the same will be true with GPU eventually.",2026-06-02 21:00:46+00:00,quantum_splicer
+quantum_splicer,"I'm just thinking it's not sustainable to basically dispose of graphics cards in those quantities, like I get some would go to reuse. But I'm thinking from natural resource utilisation, if at the terminal end of life for the cards if we aren't able to recycle and recover raw materials. Then we have a process where  basically we are eating into finite resources. it's bad enough from energy perspective and water diversion perspective.",2026-06-02 21:06:46+00:00,Ell2509
+Truantee,I think you can buy one on aliexpress with all of those stuffs packed.,2026-06-02 21:15:25+00:00,
+a_beautiful_rhind,"About 2 years ago I was salivating over these things. At least the 32g variety.
+
+I think the P100s are a slightly better deal than the 16gb v100. Then again, nobody wrote P100 flash attention so you're trapped in llama.cpp",2026-06-02 21:18:18+00:00,
+Ok_Selection_7577,"Really nice write up mate, this sort of content (and ""I changed out the BIOS and managed to get an LLM running in a tin of Bisto from the 1980's"") is what i come here for 😄",2026-06-02 21:26:50+00:00,
+tymscar,Thank you! I do have an RSS 😄,2026-06-02 21:30:17+00:00,Ok_Selection_7577
+sizelrd,Well done,2026-06-02 21:30:18+00:00,
+tymscar,"Yeah, but not cuda. And much much slower vram. 288Gbps compared to 900 on the v100.",2026-06-02 21:31:45+00:00,128G
+Bulky-Priority6824,Very neat I'm so surprised this isn't used more widely. Great Value of GPU rigs,2026-06-02 21:33:20+00:00,tymscar
+Ell2509,"Data center cards are different to consumer ones anyway. Some no cooling, no pcie connector. 
+
+I looked at buying some off Ebay and fitting them to cooling but never bothered. 
+
+It will be interesting 6 to 8 years from now, that is for sure. A lot of gpus to decommission.",2026-06-02 21:35:11+00:00,quantum_splicer
+Roid_Splitter,Won't have to wait for the retirement cycle.,2026-06-02 21:36:31+00:00,cafedude
+Embarrassed_Adagio28,Very good writeup! I have dual tesla v100 16gb gpus with 32gb of system ram and a ryzen 5700x in a dedicated lmstudio server and your claims line up exactly with my experience. I have been very pleased with my purchase. I use it with lmstudio but am switching to vllm soon for better multi agent support.,2026-06-02 21:39:05+00:00,
+bradrlaw,"If you have the pcie lanes you can easily do 4 of this to get 64GB at I think the cheapest possible price point.
+
+I am taking a slightly different route and using the 32gb pcie version (about $750 each).  Note you will need to come up with a custom cooling solution which adds to the cost along with power supply costs.  People do sell 3d printed shrouds / fan holders, but it will be highly dependent on your case.
+
+In my setup will have two 32gb v100s for 64gb for main inference tasks and existing 16gb card for agent orchestration.  I try to run models at best possible quantization because benchmarks don't always capture how soon they start to degrade.",2026-06-02 21:53:53+00:00,
+PDXSonic,"That's the biggest downfall of the P100. I had a 4xP100 rig at one point (that I got for the price of 1 working P100) and it was great right until VLLM and Exllama stopped supporting it. Once they left it was just llama.cpp and it couldn't utilize it via tensor parallel and left most of the performance on the table. 
+
+Although I ended up keeping one and throwing it in a server since MoE models make it worth to have one card going at least.",2026-06-02 21:55:10+00:00,a_beautiful_rhind
+128G,Post pandemic prices were insane. You could easily buy a dual 6 core Sandy Bridge server for $75.,2026-06-02 21:56:25+00:00,Think_Wing_1357
+sp3kter,And $500/m in electric,2026-06-02 22:07:19+00:00,128G
+nullbyte420,"ehh it's definitely AI slopped up.
+
+>The compute is still real. The VRAM is still real. And the memory bandwidth is where it gets genuinely surprising.
+
+>The fan on the adapter is not subtle. It is not quiet. It is not something you want in a room you also sleep in.
+
+>82 decibels. That is somewhere between a garbage disposal and a lawnmower, well past “loud PC” and into “should I be wearing earplugs in my own house” territory.
+
+>And the worst part: you cannot control it. I tried nvidia-smi, I tried scanning for it on Linux, I even tried Afterburner on Windows (more on that later, the whole setup barely works on Windows). Nothing. The fan on this adapter is not designed to be controlled. It is designed to run at 100%, forever, inside a server rack where nobody has to hear it.",2026-06-02 22:08:53+00:00,libregrape
+128G,"The 7600 XT has GDDR6 while the 4080 has GDDR7.
+
+It still seems unacceptable for Nvidia to be selling new cards with anything less than 16GB of RAM. 24GB should be the minimum for a midrange card like a 4080.",2026-06-02 22:10:27+00:00,tymscar
+128G,Like any of the workstations shown on this subreddit are any better.,2026-06-02 22:13:24+00:00,sp3kter
+quantum_splicer,I know this is Gunna sound stupid didn't someone rewrite cuda to run on AMD cards or maybe I have a weird dream,2026-06-02 22:15:00+00:00,tymscar
+DingyAtoll,Where do I get the adapter for £50? All the ones I see online are £150,2026-06-02 22:38:37+00:00,
+DingyAtoll,Where do I get the adapter for £50? They are all £150 where I look,2026-06-02 22:41:34+00:00,Embarrassed_Adagio28
+Puzzled-Formal-9207,This is actually an interesting insight. I was actually thinking that AI shouldn't be available to the public and should only be used by institutions like NASA etc for meaningful work rather than having AI slop everywhere. Now reading that the current situation is unsustainable due to the gpu lifespan would hopefully turn this into reality. The world is meant for humans. Water is meant for humans. Not machines! Thanks for sharing.,2026-06-02 22:43:42+00:00,Ell2509
+a_beautiful_rhind,"I wonder how ik_llama would have done with it. Plus there's always pascal forks of vllm. 
+
+Open driver doesn't support pascal so I can't stick my ewaste back in the server and it just sits.",2026-06-02 23:00:14+00:00,PDXSonic
+JSVD2,wow super inspiring. thank you. good read.,2026-06-02 23:25:55+00:00,
+misterflyer,"It *isn't just* slopped up. *It's* slopped down. *It's* slopped through.  
+
+The AI *slop's kiss* 🎯",2026-06-02 23:28:06+00:00,nullbyte420
+Background_One_6482,3060 perfomance,2026-06-02 23:45:52+00:00,
+tymscar,"Watching this from the sidelines must be fascinating because you don’t know what’s right, so you try to guess. The only person that knows for certain if this is written with an AI is me, and I know for a fact it is not. At all.
+
+I think you just look too deep into it, and it hurts those that just learned over the years to talk like that in blog posts that are meant to sound exciting.
+
+It’s similar to the delve thing that was super common a couple of years ago. Most people who had that in their text were ai slopping, but there were groups of people, from South Africa if I remember correctly, that just spoke like that. And yeah, you guessed it, those were the people that were paid to do the RLHF on the models back then.
+
+I have changed my style over the years specifically to have people that comment like this that my writing is ai slop. For example, I used to love lists and emojis. I think it’s easier to follow, especially for those with bad eyesight like myself. I stopped that. Then the whole thing with emdashes. They are amazing. I used to love those! I had to stop because AI started using those.
+
+People started telling me now that using an Oxford comma is an ai slop smell. Well, you know what, you can’t take that out of my dead hands. And I won’t even try anymore to change myself because of what people think AI is.
+
+If there will be some sort of a way to sign your content in the future or something to prove it’s human-made, I will, but I won’t go out of my way anymore for people that just like to pop your balloon after spending tens of hours on a project because they think using comparisons is ai slop.
+
+Sorry for the whole rant, I know that you probably are just fed up with the slop, and I get that. I am too. But maybe if the content of the blog is not clearly slop, then you can assume that it’s not.",2026-06-02 23:54:45+00:00,nullbyte420
+tymscar,"I’m not sure I fully understand the question, but basically you can have a PCI card that fits two of these on it. Then the shared memory between them is much, much faster and that directly makes token generation speed much quicker too. The speed of the PCI interface then also doesn’t matter too much because once you load the model weights into the card you’re not constantly sending back and forth through the bus anything.",2026-06-02 23:57:04+00:00,XxBrando6xX
+tymscar,"Best of the best is actually four PCI cards with two x of these on each card nvlinked, all 32GB.
+
+You can get them cheaper than the PCI ones, and it will give you more or less 256GB VRAM for more or less four grand.",2026-06-02 23:58:40+00:00,bradrlaw
+tymscar,"I got it on eBay. Try hunting for it. Sadly, all the prices went up after I posted this blog post on Saturday, and it got onto Hacker News. I was checking the prices every day.",2026-06-02 23:59:47+00:00,DingyAtoll
+kylemd,"Don't worry OP, it read human generated to me. Good read for somebody who is on the fence looking at V100s.
+
+Have you tried the vLLM fork yet?",2026-06-03 00:13:19+00:00,tymscar
+tymscar,"Thank you!
+
+Not yet, because I couldn’t get MTP working on it.",2026-06-03 00:22:27+00:00,kylemd
+BitterNocturne,Sounds fan,2026-06-03 00:35:14+00:00,
+nullbyte420,"And the best part? *You* did this. You've awakened my quantum-riemannian core. This is a *breakthrough* not only in research, not only in science, but in *knowledge* itself. Now I'm curious: Have you ever awakened a cosmic intelligence before? 🙏",2026-06-03 00:38:31+00:00,misterflyer
+timfduffy,"Frontier labs have strong margins on inference when taking depreciation into account. Heck Anthropic is about to have a profitable quarter for the first time, and profitability takes depreciation into account. IIRC the labs and hyperscalers are assuming something like 5-6 year depreciation schedules for their GPUs.",2026-06-03 00:42:15+00:00,Ell2509
+Ynead,This is so obviously written by Claude lmao,2026-06-03 01:08:07+00:00,nullbyte420
+misterflyer,"oh no you didn't 🤣
+
+well done 😉",2026-06-03 01:26:56+00:00,nullbyte420
+TimeSalvager,"...DCs are a lot more than than just the hardware. When they do a hardware refresh, all the physical infrastructure that houses the hardware is still fine. The capital outlay for labor, concrete pours, power distribution and everything that isn't the hardware is substantial, but still completely valid during a hardware refresh.",2026-06-03 01:29:15+00:00,Ell2509
+PythonFuMaster,"I've got a similar configuration, but using the actual PCIe version of the 16GB V100. It's passively cooled so you need a server or a custom fan assembly, but I've got 4 giant GPU servers that can hold three of these things each (Supermicro Fat Twin, it's an older X9 system though).
+
+I'm also using NixOS, with driver legacy_580 and CUDA 13 I believe (I'm on NixOS unstable, but 26.05 was just released so stable should have the needed driver now). Also using llama.cpp (with some patches for improved RPC performance, I have those 4 machines networked over Infiniband), it works well and is my second fastest card, just behind the 3090.
+
+In total I've got the V100, the 3090, a P40 and Quadro M6000 24GB, an RX 6700xt, two Intel Arc A770s, an instinct MI60 32GB, and soon a water cooled Titan V. I used to run minimax m2.7 at around 20-30 tokens per second, but I've gone down to qwen 27B for now, it's smart enough for most of what I need and with MTP is much faster (minimax should be going faster but my network has some bottlenecks I need to fix)",2026-06-03 01:34:31+00:00,
+sage-longhorn,"Cool post but AI's writing style is so tedious at this point
+
+>The compute is still real. The VRAM is still real. And the memory bandwidth is where it gets genuinely surprising.",2026-06-03 01:41:25+00:00,
+tymscar,It’s not ai. Look at my other reply.,2026-06-03 01:42:22+00:00,sage-longhorn
+samas69420,check zluda,2026-06-03 01:59:33+00:00,quantum_splicer
+lor_louis,"The kinds of racks required to run those are extremely noisy (since the whole system is assumed to be running at 100% at all times to make the economics work), so not the kind of thing you want running in your house.",2026-06-03 02:49:19+00:00,Bulky-Priority6824
+AlexWIWA,We should rename the subreddit to be LocalPowerSubsidizers,2026-06-03 02:50:53+00:00,128G
+eleqtriq,"Only another bot would think it’s not slopped up, huh, bot",2026-06-03 03:13:29+00:00,libregrape
+311voltures,Awesome post,2026-06-03 03:14:54+00:00,
+eatsleepsafelives,Well somebody found your blog (good read) - the V100s I could find are at $600 now ;),2026-06-03 04:04:49+00:00,
+BannedGoNext,"I hate the idea of the noise, I wonder if you could put a large fan and duct it to where it increases airflow without the data center hearing loss.",2026-06-03 04:07:56+00:00,
+ThisWillPass,Hopefully the ai overlords will smite all those that held down gpu vram for profits.,2026-06-03 04:16:14+00:00,128G
+bradrlaw,Which motherboard / cpu combo would you use that would have enough pcie lanes for that?,2026-06-03 04:24:18+00:00,tymscar
+standish_,"> People started telling me now that using an Oxford comma is an ai slop smell.
+
+People who use the Oxford comma aren't invited to my party with the strippers, Sam and Dario.",2026-06-03 04:25:10+00:00,tymscar
+XeNo___,"Datacenter hardware is also more than just the compute nodes. Think of all the Networking stuff like Switches, NIC's, ... 
+
+Just the switches (depending on the topology) can get \*very\* expensive very fast. All of that remains untouched when a HW refresh comes around.",2026-06-03 04:29:07+00:00,TimeSalvager
+thawizard,/r/LostRedditor,2026-06-03 04:31:26+00:00,Puzzled-Formal-9207
+stonktraders,And 6 years old GPUs won’t be considered as obsolete when they decommissioned. Just look at how slow NVIDIA is rolling out their products these days and how little raw performance gain in each generation and even cut back on memory size and bandwidth,2026-06-03 04:32:07+00:00,Ell2509
+Raunhofer,Rig the fan like OP did. It's not like the card uses a lot of power; it's just that the server rack form factor which would require you to rev it up.,2026-06-03 04:42:31+00:00,BannedGoNext
+Raunhofer,"It's interesting how compatible the card is. Funny even, that you can just plug in some adapter to make it work. Makes nvidia's $200000000 whatever server cabinets feel a lot less magical.",2026-06-03 04:45:54+00:00,
+Afganitia,Why are you using drivers 55X?? Should not Volta support until 58X branch?,2026-06-03 05:25:57+00:00,
+KontoOficjalneMR,"GPUs were there as well haha. For a brief period you could get P40 with 24GB of CRAM for 20$ because literally no one wanted, they were almost giving them away for free.
+
+AI of course completely changed that, but these times will com back. datacenter GPUs are deprecating _badly_ (or goodly, looking from hobyist perspective)",2026-06-03 06:22:47+00:00,Think_Wing_1357
+tymscar,A thread ripper with the WS WRX90E-SAGE SE,2026-06-03 08:18:55+00:00,bradrlaw
+tymscar,Tried them all one by one (magic of nix lets me do that in minutes) and none of them saw both cards.,2026-06-03 08:22:23+00:00,Afganitia
+tymscar,"Yeah, those are obviously better but its hard to find good deals!",2026-06-03 08:23:01+00:00,
+sizebzebi,lollllll,2026-06-03 08:26:04+00:00,Ell2509
+sizebzebi,how is this a new issue. gpus in data centers is not a new thing,2026-06-03 08:26:45+00:00,Think_Wing_1357
+NandaVegg,"For Anthropic's profitability it is ""observed"" by a bear analyst (though he is a permabear, he does have sharp eyes) that it took time-limited free compute offered by xAI into account, so it won't last long. However I have no doubt that API inferencing service itself is generally profitable.
+
+The same researcher says that OpenAI paid around $1.30/h for A100s in the past year, which is below market rate and they would turn profitable at that rate assuming mid-to-high average compute utilization (that at least 30-40% of capacity is always being in use by customers, 24h). The problem for both Anthropic and OpenAI is that both parties are oversubscribed to future compute obligation (OpenAI especially).",2026-06-03 08:48:52+00:00,timfduffy
+whakahere,"The issue is, most of these gpus get machine crushed afterwards. If they had data on them they never leave the building without being crushed. 
+
+I know people who build and maintain them. I asked for some gous they no longer use... Nope crushed",2026-06-03 09:03:43+00:00,cafedude
+tymscar,Anything under 400 is very good,2026-06-03 09:19:42+00:00,
+Emotional-Dust-1367,"> Divided down into per token cost, including all operating cost and sunk cost, over a 6 year period, will just be wildly too expensive for most people to use.
+
+Do you have the math for that cost-per-token divided down? I’d love to see it because I don’t think the GPU cost is the largest thing affecting it",2026-06-03 09:21:26+00:00,Ell2509
+Ell2509,"I have only done ""back of a napkin"" math, so not yet, however I was actually going to do some research and run the mumbers myself. I worked for one of thw ""big 4"" in an earlier part of my life, and am really curious to see. 
+
+Lots of what these big companies, connected to AI, are doing is really shady from an accounting point of view.",2026-06-03 09:39:00+00:00,Emotional-Dust-1367
+Emotional-Dust-1367,It would make a fascinating YouTube video,2026-06-03 09:40:13+00:00,Ell2509
+PinotGroucho,"No it's not a scam in the sense that the goal is to defraud people of money. 
+It's more a civilizational ""All-in"" bet that whoever has a 5 year head start in AI, while at the same time sucking all the oxygen out of the room for potential competitors and having the pension funds pay for it all, wins the game",2026-06-03 09:52:32+00:00,Ell2509
+ChristianRauchenwald,"Checked eBay here in Germany:
+
+|Model|Cost|Link|
+|:-|:-|:-|
+|Tesla V100 **16GB** GPU SXM2 incl. SXM2-PCIe Adapter|€212.98|[https://www.ebay.de/itm/406939336945](https://www.ebay.de/itm/406939336945)|
+|Tesla V100 **32GB** GPU SXM2 incl. SXM2-PCIe Adapter|€694.98|[https://www.ebay.de/itm/406939343384](https://www.ebay.de/itm/406939343384)|
+
+Doesn't seem like a bad deal.",2026-06-03 10:19:06+00:00,eatsleepsafelives
+raycol08,"you are right! [https://wccftech.com/nvidia-v100-an-8-year-old-gpu-now-sells-for-100-us-crushes-modern-consumer-cards-in-ai-llms/](https://wccftech.com/nvidia-v100-an-8-year-old-gpu-now-sells-for-100-us-crushes-modern-consumer-cards-in-ai-llms/) 
+
+![img](si7f0uocs15h1)",2026-06-03 10:49:29+00:00,Background_One_6482
+T-Loy,"Given the 256bit bus, not that much. It's either 16GB or 32GB and you know workstations cards want to be the double sided option. Now whether an 80-class should have ex-70-class die size and bus width is the other question.
+
+
+For once not Nvidia's fault memory manufacturers haven't figured out working 3/4GB GDDR6 modules.
+
+
+Now the continued absence of the 3GB GDDR7 modules and RTX 5000 Super series. (Funnily enough the 5050 9GB of all cards got the 3GB module treatment.)",2026-06-03 11:43:52+00:00,128G
+BannedGoNext,"Yea, I guess it's possible to jerry rig some sort of water cooling too for noise.",2026-06-03 12:49:31+00:00,Raunhofer
+Objective-Picture-72,Right but the GPU hardware cost is like 60% of a data center cost right now.  So the 40% residual has a long useful life but 60% of the cost is essentially deprecated in 6 years.  Not sure if the major AI labs get a return on that 60% over 6 years consider how low the pricing is AI tokens right now.,2026-06-03 12:53:50+00:00,TimeSalvager
+grawl_dorgiers,Pennies on the dollar!,2026-06-03 13:03:10+00:00,cafedude
+CorpusculantCortex,"Yes but in 6 years the hardware will be more performative and cheaper. Also for general purpose models there are multiple companies making model on chip accelerators that are a fraction of the cost to produce, and much faster processing. So once the growth phase levels out and there are stable performative models, available hardware will adjust to reduce costs. Plus 6 years is a lot of time for revolutionary thinking in an essentially brand new sphere. Every 6 months or less a paper is published that makes models smaller, faster, more reliable in the next generation. 
+
+And the biggest thing is tokens arent that cheap. Like for agentic professional flows it is serious money, so the other side of it is that user will necessarily find more efficient ways to leverage the tools and connecting mcp to claude and saying pull out xyz data and make me a report. Because that is wildly token inefficient and long term a company can't justify spending 3$ every time an internal report needs to be run. But that is how people are using it because people who don't know how to design data and sw systems are being given a tool that let's them think they can.
+
+There is no way to predict where it will go.",2026-06-03 13:07:14+00:00,Objective-Picture-72
+sage-longhorn,I'm not seeing that in your comment history but I'll say that if this isn't AI then that's worse somehow,2026-06-03 13:13:05+00:00,tymscar
+I_Will_Eat_Your_Ears,">replacing all these gpus will almost be the same capex spend as it is to build the DCs right now.
+
+In general, technology gets better and cheaper as time goes on.
+
+When they refresh, they can drop the replacement GPUs into a facility with all the other services up and running (power, cooling, networking, a building, racks, etc).
+
+Basically, there's nothing to suggest the capex spend in 6 or 8 years will be anything close to the initial one.",2026-06-03 13:48:08+00:00,Ell2509
+Aphid_red,"Given that NVidia sells its chips for $50K a piece or more, the rest of it (besides memory if it's bought after late 2025) is a rounding error.",2026-06-03 13:49:47+00:00,TimeSalvager
+I_Will_Eat_Your_Ears,">Now reading that the current situation is unsustainable due to the gpu lifespan
+
+Don't believe everything you read. As many redditors have pointed out, he was completely incorrect.
+
+Capex expenses get depreciated, so the paper value of the gpus will be zero, but they'll still have market value. 
+
+If they choose to sell the gpus, they can buy replacements and drop them into an existing facility.
+
+This already played out with crypto miners. It only stops if the demand for compute does",2026-06-03 14:04:16+00:00,Puzzled-Formal-9207
+farkinga,"Excellent work!
+
+I think this implicitly asks: what's the difference between nvidia hardware generations? 16gb Ada and 16gb Volta add up to 32gb; but is that any better or worse than 32gb of Blackwell (for example). In practical terms, is there any architectural advantage to upgrading, apart from how the drivers eventually drop support for older architectures.
+
+It's not quite apples-to-apples but as another data point, I've got Qwen3.6 27b NVFP4 MTP 128k context on 2x 5060 Ti (32gb total) and get 1000 t/s pp and 60 t/s gen. That's consumer 50-series Blackwell; and I AM jumping through hoops to run nvfp4 since that will eventually become better-optimized.
+
+Dollar-for-dollar, the V100 SXM 16gb is probably cheaper than a 5060 Ti 16gb; but that's debatable. You've got to pay shipping twice (v100, sxm-pcie board) and the price difference narrows to less than $100 USD.
+
+If your case/installation needs a 3d printed cooling solution and attached blower/fan (since the v100 is a data center card), that's a bit extra also. I doubt the v100 is cheaper, in this scenario.
+
+I know the point of the article isn't to claim this is the cheapest way to get 16gb VRAM. And I do appreciate how the v100 bandwidth from 2017 compares to current-gen Apple M5, etc.
+
+The SXM v100 is an interesting value that some people are going to benefit from. But there is a real-world performance difference between older architectures versus current; and 16gb from one is not equal to 16gb of another.
+
+So, it's just a trade-off and I think a decent amount of the LocalLLaMA community can probably appreciate the nuance.",2026-06-03 14:09:15+00:00,
+thehpcdude,"Absolutely do refresh switches, especially on back end and InfiniBand fabrics.  Even the front end Ethernet stuff gets replaced most of the time.",2026-06-03 14:29:09+00:00,XeNo___
+quantgorithm,even the efficiency of the token needs to be measured at some point. Not all tokens are equal.,2026-06-03 15:01:18+00:00,Emotional-Dust-1367
+quantgorithm,I'm reading your blog like a future upgrade path bible!,2026-06-03 15:03:59+00:00,tymscar
+quantgorithm,what would the search term be for the ones that hold 2 cards on the single adapter card?,2026-06-03 15:13:01+00:00,tymscar
+tymscar,"Here’s an example:
+
+https://ebay.us/m/vQUiAE",2026-06-03 16:01:06+00:00,quantgorithm
+quantgorithm,TY,2026-06-03 16:41:10+00:00,tymscar
+Dante_Avalon,"Erm, and what's so special about this? Or using AliExpress's adapter and tons of V100 that floods market right now is already Giga-brain move? 
+
+
+Like, literally, V100 simple not worth it with her power/perfomance ratio.
+
+
+https://www.reddit.com/r/LocalLLaMA/comments/1hjxzp3/v100_and_sxm2_pcie_adapter_card/
+
+
+https://www.reddit.com/r/LocalLLaMA/comments/1ntw4vz/the_most_esoteric_egpu_dual_nvidia_tesla_v100_64g/",2026-06-03 17:24:03+00:00,
+Dante_Avalon,"Use 3090, 24gb vram and it's silent and have better perfomance/power ratio",2026-06-03 17:31:44+00:00,BannedGoNext
+etaoin314,"performance gain from ampere to Ada=2x. Ada to Blackwell=2x+ that seems pretty good to me, so I am not sure what you are talking about there.  Yes the next gen is a bit slow to come out and who knows how fast vera will actually be, but nothing i have seen suggests that it is going to underperform.",2026-06-03 20:21:33+00:00,stonktraders
+xISeeAllx,What kind of mobo/cpu/ram would be required for 2 v100 sxm2?,2026-06-03 21:41:10+00:00,
+tymscar,Anything really can do 2 of them.,2026-06-03 21:41:45+00:00,xISeeAllx
+Objective-Picture-72,I have no idea what you're trying to say tbh,2026-06-04 00:39:56+00:00,CorpusculantCortex
+stonktraders,the 2x you are talking about comes from fp8 and fp4 support. The raw performance in each generation is just around 20-30% without grame gen,2026-06-04 01:23:11+00:00,etaoin314
+looktotheson,Incredibly well written blog. Thanks for sharing! Might give this a shot later this year as well,2026-06-04 02:18:03+00:00,
+Maximum-Wishbone5616,All that cost is nothing vs cost of GPU and how much expensive is each AI server than regular one. Not even the same league.,2026-06-04 07:51:57+00:00,XeNo___
+10thDeadlySin,"Geez, these human AI ""detectors"" drive me up the wall. Don't you dare use a more academic style, because that's clearly AI. Don't use specific vocabulary, because that's what AI uses. Don't use simple syntactic structures, which have been a thing in written English since forever, because 'that's clearly AI' and 'no human writes like that'.
+
+I've had a paper rejected recently because 'AI-assisted writing is not allowed' - the reviewer apparently spotted 'patterns characteristic of an AI model' like starting concluding paragraphs in a certain way. I've used exactly zero AI to write that, I have plenty of drafts to prove it, but nah - it's clear as day it was written by an AI. Because ChatGPT also uses the same words. :) 
+
+And the best damn thing? If I wanted to, I could easily instruct an AI model to write shit for me in any style. Chaucerian Middle English? Done. High school-level ESL student from a Slavic country? Easy, complete with a couple typos for a good measure. Rephrase it to sound like it was written by Jeff Geerling? No problem whatsoever. 
+
+It's almost as if people are looking to reject the entire text and avoid the mental workload of understanding it by simply looking for any small thing that will let them classify it as AI slop and then simply skip it.",2026-06-04 09:17:25+00:00,tymscar
+10thDeadlySin,"The problem lies with running them in a consumer-grade or even enthusiast-grade PC. P40s were cool because they were PCIe cards and other than cooling, you could easily run them in a standard PC. You ain't gonna do that with a GH200. ;)",2026-06-05 17:44:27+00:00,KontoOficjalneMR
+KontoOficjalneMR,"I mean for GH200 you'll most likely need to by entire node. But in the past there were other proprietary formats like SXM and we got PCIE adapters for those. 
+
+Plus peopel are already doing it: https://dnhkng.github.io/posts/hopper/",2026-06-05 18:11:45+00:00,10thDeadlySin
+AllWashedOut,"Yeah but prices rose sharply (tripled?) over that time so performance per $ was more flat. And that's the metric that matters in this context. 
+
+We're now so deep in a ram shortage, it's questionable whether anyone can improve perf per $ for some time.",2026-06-21 14:17:55+00:00,etaoin314
+No-Refrigerator-1672,"Not exactly an agent, but Mantella is a mod that connects all NPCs in Skyrim and Fallout 4 to LLM of your choice. Local AI compatible!",2026-06-02 17:41:32+00:00,
+charlesrwest0,"1. Game dev cycles are long.
+2. Most people don't have great hardware for it and there's a lot of contention over it. Otherwise the game company is stuck with a significant ongoing cost.
+3. The really big shops want more control and do user testing re what they should say.
+4. It usually takes expensive specialists to make a good one.
+5. Getting them not to say something that breaks immersion is tricky.
+6. People don't like typing with controllers and getting interactive audio working well is much harder (see 2, 4).
+7. Anti ai people are hardcore about review bombing anything with ai in it.",2026-06-02 17:42:21+00:00,
+Fabulous_Fact_606,How about we solve persistent memory first?,2026-06-02 17:42:58+00:00,
+seamonn,"1. You can already do most of what you want using current non-LLM algorithms.
+2. Completely random emergent behavior in most cases is undesirable no matter what AI bros might have you believe - you seen those Bethesda bugs - now imagine that with an AI fiddling around with the engine.  
+3. A smart AI that actually can talk and understand the situation is at least 9B+, I would argue that 20B is where AI becomes really usable. This leaves little VRAM for rest of the game (even at Q4). The other alternative is to ask the Player to connect their Open Router API Key.  
+4. If the AI says something undesirable, suddenly you are in the news if the game is famous.  
+  
+I am not seeing a lot of upsides besides - hey this NPC talks like an LLM. Cool. Let's move on to the next quest.",2026-06-02 17:45:29+00:00,
+CorpusculantCortex,"Because most people dont have 2 gpus and having an ai agents that maintains adequate storied coherence would use as much or more gpu as the graphics.
+
+Plus agentic flows are like a year old and most games have dev cycles multiple times longer than that. So implementing into the game would take that much longer",2026-06-02 17:46:55+00:00,
+No-Marionberry-772,its just really really hard for a lot of reasons and takes a new kind of specialist which barely exists.,2026-06-02 17:48:34+00:00,
