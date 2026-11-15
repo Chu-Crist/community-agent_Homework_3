@@ -1,0 +1,7 @@
+Loaded 500 rows of real data.
+Graph has 278 users and 169 connections.
+
+=== REAL RESULTS ===
+Total Communities detected: 122
+Top 5 community sizes: [(103, 19), (71, 18), (106, 17), (21, 16), (14, 7)]
+Top 2 users in the largest community: [('tymscar', 0.05776173285198556), ('128G', 0.021660649819494587)]
