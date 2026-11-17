@@ -5,7 +5,7 @@ import community as community_louvain
 def detect_communities(graph):
     """Louvain community detection. Returns dict[user, community_id]."""
     undirected = graph.to_undirected() if graph.is_directed() else graph
-    partition = community_louvain.best_partition(undirected, weight="weight")
+    partition = community_louvain.best_partition(undirected, weight="weight", random_state=42)
     return partition
 
 
