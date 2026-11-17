@@ -7,11 +7,9 @@ import config
 from tools.data import load_data
 from tools.graph import build_graph
 
-from tools.stubs import (
-    detect_communities,
-    summarize_community,
-    plot_network,
-)
+from tools.communities import detect_communities
+from tools.analysis import summarize_community
+from tools.viz import plot_network   # P3: confirm the function name
 
 # --------------------------------------------------
 # 1. CONNECT TO BIGMODEL
